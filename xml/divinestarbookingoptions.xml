@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<divinestarbookingformoptions>
+	<section for='generaloptions' name="mainoptins" title="Main Options" icon="">
+		<option type="text">
+			<label>Test 1</label>
+			<name>test1</name>
+			<value>#1a1a1a</value>
+			<description> This is the first test option. </description>
+		</option>
+		<option type="text">
+			<label>Test 2</label>
+			<name>test2</name>
+			<value>what ever 2!</value>
+			<description> This is the second test option. </description>
+		</option>
+		<subsection for='generaloptions' name="subsection1" title="Sub Section Options" icon="">
+			<option type="text">
+				<label>Sub test 1</label>
+				<name>subtest1</name>
+				<value>sub test 1</value>
+				<description> This is the sub section test option. </description>
+		    </option>
+		</subsection>
+		<subsection for='generaloptions' name="subsection3" title="Sub Section 3 Options" icon="">
+			<option type="text">
+				<label>Sub test 3</label>
+				<name>subtest3</name>
+				<value>sub test 3</value>
+				<description> This is the sub section test option. </description>
+		    </option>
+		</subsection>
+	</section>
+	<section for='generaloptions' name="otheroptins" title="Other Options" icon="">
+		<option type="text">
+			<label>Test 3</label>
+			<name>test3</name>
+			<value>what ever 3!</value>
+			<description> This is the third test option. </description>
+		</option>
+		<subsection for='generaloptions' name="subsection2" title="Sub Section 2 Options" icon="">
+			<option type="text">
+				<label>Sub test 2</label>
+				<name>subtest2</name>
+				<value>sub test 2</value>
+				<description> This is the sub section test option. </description>
+		    </option>
+		</subsection>
+		<subsection for='generaloptions' name="subsection4" title="Sub Section 4 Options" icon="">
+			<option type="text">
+				<label>Sub test 4</label>
+				<name>subtest4</name>
+				<value>sub test 4</value>
+				<description> This is the sub section test option. </description>
+		    </option>
+		</subsection>
+	</section>
+	<section for='generaloptions' name="otheroptinstwo" title="Other Options 2" icon="">
+		<option type="text">
+			<label>Test 4</label>
+			<name>test4</name>
+			<value>what ever 4!</value>
+			<description> This is the fourth test option. </description>
+		</option>
+	</section>
+</divinestarbookingformoptions>
