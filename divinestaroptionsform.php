@@ -18,12 +18,75 @@ private $dso;
 	}
 
 
+  private function get_option_html($option) {
 
+
+  	if($option['type'] == 'text') {
+  	return $this->text_option($option,$this->dso->get_option((string)$option->name));
+  		}
+
+  	if($option['type'] == 'number') {
+  	return $this->number_option($option,$this->dso->get_option((string)$option->name));
+  		}
+
+  	if($option['type'] == 'checkbox') {
+  	return $this->check_box_option($option,$this->dso->get_option((string)$option->name));
+  		}
+
+  }
+
+
+	private function number_option($option,$value) {
+		$name = $option->name;
+		$label = $option->label;
+		$description = $option->description;
+		$id = $option->value . '-id';
+		$did = $option->name . '-description';
+		return <<<HTML
+
+		<tr>
+		<th scope="row"><label for="{$id}">$label</label></th>
+		<td><input name="{$name}" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+		<p class="description" id="{$did}">$description</p></td>
+		</tr>
+HTML;
+	}
+
+	private function check_box_option($option,$value) {
+		$name = $option->name;
+		$title = $option->title;
+		$label = $option->label;
+		$description = $option->description;
+        
+        $did = '';$ds = '';$dad = '';
+		if($description != '') {
+		$did = $option->name . '-description';
+		$ds = <<<HTML
+		<p class="description" id="{$did}">$description</p>
+HTML;
+		$dad = "aria-describedby='$did'";
+		}
+        $checked = '';
+		if($value != ''){
+		$checked = 'checked=""';
+		}
+
+		$id = $option->value . '-id';
+		$did = $option->name . '-description';
+		return <<<HTML
+		<tr>
+		<th scope="row">$title</th>
+		<td> <fieldset><legend class="screen-reader-text"><span>$title</span></legend><label for="{$name}-id">
+		<input name="{$name}" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
+		</fieldset>
+		$ds
+		</td>
+		</tr>
+HTML;
+	}
 
 	private function text_option($option,$value) {
 		$name = $option->name;
-
-//$value = $option->value;
 		$label = $option->label;
 		$description = $option->description;
 		$id = $option->value . '-id';
@@ -53,6 +116,9 @@ HTML;
 		</form>
 HTML;	
 	}
+
+
+
 
 
 	function get_options_form($options) {
@@ -85,9 +151,9 @@ HTML;
 			$i++;
 			foreach($section->option as $key => $option){
 				
-				if($option['type'] == 'text') {
-					$form_html .= $this->text_option($option,$this->dso->get_option((string)$option->name));
-				}
+		
+					 $form_html .= $this->get_option_html($option); 
+				
 
 			}
 
@@ -109,9 +175,9 @@ HTML;
 					<li class='ds-subection-menu-option-li'><button data-id='{$sname}' data-for='{$name}' class='ds-section-menu-option-button '><div class='ds-section-menu-option-text'>$stitle</div></button></li>
 HTML;
 					foreach($subsection->option as $key => $soption) {
-						if($soption['type'] == 'text') {
-							$form_html .= $this->text_option($soption,$this->dso->get_option((string)$soption->name));
-						}
+				
+							$form_html .= $this->get_option_html($soption);
+					
 					}
 					$form_html .= $this->option_form_end($name);	
 				}

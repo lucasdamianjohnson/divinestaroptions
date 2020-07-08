@@ -13,6 +13,13 @@
 			<value>what ever 2!</value>
 			<description> This is the second test option. </description>
 		</option>
+		 <option type="checkbox">
+	    	<title>Check box test</title>
+			<label>Sub test 3</label>
+			<name>checkboxtest1</name>
+			<value>true</value>
+			<description> This is a description for a checkbox.</description>
+	    </option>
 		<subsection for='generaloptions' name="subsection1" title="Sub Section Options" icon="">
 			<option type="text">
 				<label>Sub test 1</label>
@@ -28,6 +35,7 @@
 				<value>sub test 3</value>
 				<description> This is the sub section test option. </description>
 		    </option>
+
 		</subsection>
 	</section>
 	<section for='generaloptions' name="otheroptins" title="Other Options" icon="">
