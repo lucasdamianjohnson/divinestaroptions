@@ -202,7 +202,8 @@ HTML;
 		</td>
 HTML;	
 
-
+        $css = $this->get_css();
+        $js = $this->get_javascript();
 		echo <<<HTML
 		$section_html
 		<td class='ds-options-section-form-table'>
@@ -210,10 +211,254 @@ HTML;
 		</td></tr>
 		</tbody>
 		</table>
+		$css $js
+HTML;
+	}
 
+
+private function get_javascript() {
+   return <<<HTML
+<script type="text/javascript">
+	 jQuery(document).ready(function($) {
+
+	 	$(".ds-options-menu-form").submit(function(event) {
+	 		event.preventDefault();
+	 		console.log("the form submited");
+	 		var data = $(this).serializeArray(); 
+	 		$(this).find('input[type="checkbox"]').each(function(){
+	 		      if( !$(this).is(":checked")) {
+	 		      	var name = $(this).attr('name');
+	 		      	console.log(name);
+	 		      	data.push({
+	 		      		name:name,
+	 		      		value: ''
+	 		      	});
+	 		      }
+	 		});
+	 		var data = JSON.stringify(data);
+	 		var going_to = $(this).attr('data-going-to');
+	 
+	 		var send = {
+	 			action: 'divine_star_updateoptions',
+	 			going_to: going_to,
+	 			data: data
+	 		}
+	 		$.ajax({ 
+	 			type: 'post',
+	 			url:ajaxurl,
+	 			data:send,
+	 			success: function(data){
+	 				console.log(data);
+	 			},error: function(data) {
+	 				console.log('there was an error');
+	 				console.log(data);
+
+	 			}
+
+
+	 		}); 
+
+
+
+
+	 	});
+
+       $(".ds-section-menu-option-button").click(function(event){
+       		event.preventDefault();
+       		var id = $(this).attr("data-id"); 
+       		$(".ds-section-menu-option-button").each(function() {
+       			$(this).removeClass("active");
+       		});
+       		$(this).addClass('active');
+
+       	   if($(this).hasClass("ds-section-menu-option-top-level")) {	
+       		if($(this).hasClass("ds-section-optoin-has-submenu")) {
+    
+       			$(".ds-section-menu-option-button.ds-section-menu-option-top-level").each(function(event){
+       				$(this).removeClass('ds-option-section-expanded');
+       			}); 
+       			$(this).addClass('ds-option-section-expanded');
+       		} else {
+       			$(".ds-section-menu-option-button.ds-section-menu-option-top-level").each(function(event){
+       				$(this).removeClass('ds-option-section-expanded');
+       			}); 
+       		}
+       	   }
+
+       		if($(this).hasClass("ds-section-menu-option-top-level")) {	
+    
+       		$("form.ds-options-menu-form").each(function(){
+       			var fid = $(this).attr("id");
+       			var forid = $(this).attr("data-for");
+       			if(fid == id+'-form') {
+       			$("#"+forid+" .ds-subsection-menu-ul").css("display","block");	
+       			$(this).css("display","block");
+       			} else {
+       			$("#"+forid+" .ds-subsection-menu-ul").css("display","none");	
+       			$(this).css("display","none");
+       			}
+
+       		});
+       		} else {
+       		$("form.ds-options-menu-form").each(function(){
+       			var fid = $(this).attr("id");
+       			var forid = $(this).attr("data-for");
+       			if(fid == id+'-form') {
+       			$(this).css("display","block");
+       			} else {
+       			$(this).css("display","none");
+       			}
+
+       		});
+
+
+       	 }
+
+       });
+
+	 });
+
+</script>
 
 
 HTML;
+
+}
+
+private function get_css() {
+	return <<<HTML
+<style type="text/css">
+	
+
+.ds-options-menu-form {
+	margin-top: -35px;
+}
+
+
+table.ds-options-menu-form-table {
+
+}
+
+table.ds-options-menu-form-table td.ds-options-menu-form-table-title {
+	width: 300px;
+}
+
+td.ds-options-section-form-table {
+
+padding: 5px;
+vertical-align: top;
+margin: 0;
+}
+table.ds-options-menu-table {
+	margin: 0;
+	padding: 0px;
+}
+table.ds-options-menu-table td.ds-options-menu-section-td {
+	vertical-align: top;
+	padding: 0px;
+	margin: 0;
+	width: 200px;
+	height: 100vh;
+	border-top: 2px solid black;
+	background-color: #2d2e39;
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list {
+	vertical-align: top;
+	margin: 0;
+	padding: 0px;
+	
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li{
+	vertical-align: top;
+	margin: 0;
+}
+
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button {
+    background-color: inherit;
+    color: white;
+    border: 0;
+	width: 100%;
+	height: 30px;
+	padding: 0px;
+}
+
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button:hover {
+    background-color: #6e2aa2;
+    color: #1a1a1a;
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button div.ds-section-menu-option-icon:hover {
+
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button div.ds-section-menu-option-icon {
+	position: absolute;
+	margin-top: -10px;
+	margin-left: 5px;
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button div.ds-section-menu-option-text {
+	position: absolute;
+	margin-top: -8px;
+	margin-left: 35px;
+	font-weight: 600;
+}
+
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-option-section-expanded.ds-section-menu-option-button {
+	border-bottom: 2px solid #1a1a1a;
+
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button.active {
+	background-color: #8031bc;
+	color: white;
+}
+table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button.active div.ds-section-menu-option-icon {
+	color: white;
+}
+
+table.ds-options-menu-table td.ds-options-menu-section-td  ul.ds-options-section-list li.ds-section-menu-option-li 
+ul.ds-subsection-menu-ul li.ds-subection-menu-option-li
+{
+   font-size: 12px;
+   font-weight: 300;
+
+}
+table.ds-options-menu-table td.ds-options-menu-section-td  ul.ds-options-section-list li.ds-section-menu-option-li 
+ul.ds-subsection-menu-ul
+{
+   margin-top: -3px;
+   background-color: #1a1a1a;
+
+}
+.ds-custom-page-title {
+	width: 76vw;
+	background-color: #1a1a1a;
+    height: 50px;
+    margin: 0;
+    padding: 50px;
+	text-align: center;
+}
+.ds-custom-page-title h2 {
+	color: #8031bc;
+	margin-top: 10px;
+	font-size: 30px;
+}
+</style>
+HTML;	
 	}
+
+
+
+
+
+
+
+
+
 
 }
