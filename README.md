@@ -1,7 +1,7 @@
 # Divine Star Options
 
 <p align="center">
-  <img src="https://lukejohnson.media/wp-content/uploads/2020/07/logo-small.png" />
+  <img src="https://lukejohnson.media/wp-content/uploads/2020/07/divinestar_options_2.png" />
 </p>
 
 Currently under development. 
