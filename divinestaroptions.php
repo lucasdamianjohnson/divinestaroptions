@@ -29,6 +29,8 @@ class DivineStarOptions
 		$this->unset_options();
 		$this->loaded_options = $this->load_value_json($options);
 	}
+
+
 	private function get_loaded_options() {
 
 		return $this->loaded_options;
@@ -37,6 +39,8 @@ class DivineStarOptions
 	function get_option($name) {
 		return $this->loaded_options[$name]['value'];
 	}
+
+
 	private function set_option($name,$value) {
 		return $this->loaded_options[$name]['value'] = $value;
 	}
@@ -46,6 +50,17 @@ class DivineStarOptions
 	}
 
 
+function get_options_js($options) {
+     $json = json_encode($this->load_value_json($options));
+
+	echo <<<HTML
+	<script type="text/javascript">
+		var ds_options = JSON.parse('{$json}');
+	</script>
+
+HTML;
+
+}
 
 
 

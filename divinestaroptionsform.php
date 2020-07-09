@@ -323,6 +323,8 @@ private function get_javascript() {
    return <<<HTML
 <script type="text/javascript">
 
+
+
 //https://github.com/jfriend00/docReady
 (function(funcName, baseObj) {
     "use strict";
