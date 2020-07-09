@@ -423,6 +423,9 @@ private function get_css() {
 	return <<<HTML
 <style type="text/css">
 
+ul {
+  list-style: none;
+}
 
 @media (max-width:568px) {
 
@@ -431,22 +434,94 @@ private function get_css() {
 
 @media (max-width:961px) {
 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button div.ds-section-menu-option-text {
+	position: absolute;
+	margin-top: -8px;
+	margin-left: 20px;
+	font-weight: 600;
+}
+
+
 		div.ds-options-menu-wrap {
 		left: 30px;
 		width: 40px;
+
 	}
 
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
-button.ds-section-menu-option-button div.ds-section-menu-option-text {
-	display: none;
-	
+button.ds-section-menu-option-button.ds-section-menu-option-top-level div.ds-section-menu-option-text {
+	visibility: hidden;
 }
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list {
+	z-index: 999;
+}
+
+div.ds-options-menu-wrap div.ds-options-menu 
 ul.ds-subsection-menu-ul
 {
+  transition: 0.2s 1s; 
+  visibility: hidden;
   display: none !important;
+}
+div.ds-options-menu-wrap div.ds-options-menu 
+ul.ds-subsection-menu-ul:hover
+{
+    visibility: visible;
+  transition-delay: 0s; /* react immediately on hover */
+  position: absolute;
+  left: auto;
+  display: block;
+  width: 100%;
+  margin-left: 40px;
+  min-width: 175px;
+  top: auto;
+  z-index: 999;
 
 }
+div.ds-options-menu-wrap div.ds-options-menu 
+ul.ds-subsection-menu-ul:hover  ~ ul.ds-options-section-list li.ds-section-menu-option-li  button.ds-section-menu-option-top-level div.ds-section-menu-option-text
+{
+   width: 200px;
+  
+}
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover
+{
+width: 200px;
+}
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover button.ds-section-menu-option-top-level
+div.ds-section-menu-option-text
+{
+color: white;
+width: 200px;
+  visibility: visible !important;
+ display: block !important;
+}
+
+
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
+   ul.ds-subsection-menu-ul:first-of-type
+{
+  visibility: visible;
+  transition-delay: 0s; /* react immediately on hover */
+  position: absolute;
+  left: auto;
+  width: 100%;
+  margin-left: 40px;
+  min-width: 175px;
+  top: auto;
+  z-index: 999;
+  display: block !important;
+}
+/*
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+ ul.ds-subsection-menu-ul:hover
+{
+    z-index: 999;
+  display: block !important;
+}
+*/
 
 div.ds-form-container {
 	margin-left: 40px;
@@ -454,35 +529,59 @@ div.ds-form-container {
 
 
 }
+
 @media (min-width:961px) {
-		div.ds-options-menu-wrap {
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button div.ds-section-menu-option-text {
+	position: absolute;
+	margin-top: -8px;
+	margin-left: 35px;
+	font-weight: 600;
+}
+	
+	div.ds-options-menu-wrap {
 		left: 160px;
 		width: 200px;
 	}
-	
+
 	div.ds-form-container {
 		margin-left: 200px;
 	}
+div.ds-options-menu-wrap div.ds-options-menu 
+ul.ds-subsection-menu-ul
+{
+  display: block;
 
-
-	
 }
+
+
+
+
+}
+
 @media (max-width:781px) {
+
 		div.ds-options-menu-wrap {
 		left: 0px;
 		top: 45px;
 	}
+
 }
 
 @media (min-width:781px) {
+
 	div.ds-options-menu-wrap {
 		top: 30px; 
 	}
+
 }
+
+
+
+
 .flex-row {
 	display: inline-flex;
 	flex-wrap: nowrap;
-
 }
 
 .ds-options-menu-form {
@@ -555,13 +654,7 @@ button.ds-section-menu-option-button div.ds-section-menu-option-icon {
 	margin-top: -10px;
 	margin-left: 5px;
 }
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
-button.ds-section-menu-option-button div.ds-section-menu-option-text {
-	position: absolute;
-	margin-top: -8px;
-	margin-left: 35px;
-	font-weight: 600;
-}
+
 
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-option-section-expanded.ds-section-menu-option-button {
@@ -578,14 +671,14 @@ button.ds-section-menu-option-button.active div.ds-section-menu-option-icon {
 	color: white;
 }
 
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu 
 ul.ds-subsection-menu-ul li.ds-subection-menu-option-li
 {
    font-size: 12px;
    font-weight: 300;
 
 }
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu
 ul.ds-subsection-menu-ul
 {
    margin-top: -3px;
@@ -595,7 +688,7 @@ ul.ds-subsection-menu-ul
 
 
 .ds-custom-page-title {
-	width: 76vw;
+	width: 100%;
 	background-color: #1a1a1a;
     height: 50px;
     margin: 0;
