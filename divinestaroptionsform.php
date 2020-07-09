@@ -214,10 +214,8 @@ HTML;
 		$form_html = '';
 		$i = 0;
 		$section_html = <<<HTML
-		<table class="form-table ds-options-menu-table" role="presentation">
-		<tbody>
-		<tr>
-		<td class='ds-options-menu-section-td'>
+		<div class="ds-options-menu-wrap">
+		<div class='ds-options-menu'>
 		<ul class='ds-options-section-list'>
 HTML;
 		
@@ -288,18 +286,25 @@ HTML;
 		}
 		$section_html .= <<<HTML
 		</ul>
-		</td>
+		</div>
 HTML;	
 
         $css = $this->get_css();
         $js = $this->get_javascript();
 		echo <<<HTML
+		<div class='flex-row'>
+		<div class='flex-col'>
 		$section_html
-		<td class='ds-options-section-form-table'>
+		</div>
+		</div>
+		</div>
+		<div class='flex-row'>
+		<div class='flex-col'>
+		<div class='ds-form-container'>
 		$form_html
-		</td></tr>
-		</tbody>
-		</table>
+		</div>
+		</div>
+		</div>
 		$css $js
 HTML;
 	}
@@ -417,10 +422,71 @@ HTML;
 private function get_css() {
 	return <<<HTML
 <style type="text/css">
+
+
+@media (max-width:568px) {
+
+}
+
+
+@media (max-width:961px) {
+
+		div.ds-options-menu-wrap {
+		left: 30px;
+		width: 40px;
+	}
+
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+button.ds-section-menu-option-button div.ds-section-menu-option-text {
+	display: none;
 	
+}
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+ul.ds-subsection-menu-ul
+{
+  display: none !important;
+
+}
+
+div.ds-form-container {
+	margin-left: 40px;
+}
+
+
+}
+@media (min-width:961px) {
+		div.ds-options-menu-wrap {
+		left: 160px;
+		width: 200px;
+	}
+	
+	div.ds-form-container {
+		margin-left: 200px;
+	}
+
+
+	
+}
+@media (max-width:781px) {
+		div.ds-options-menu-wrap {
+		left: 0px;
+		top: 45px;
+	}
+}
+
+@media (min-width:781px) {
+	div.ds-options-menu-wrap {
+		top: 30px; 
+	}
+}
+.flex-row {
+	display: inline-flex;
+	flex-wrap: nowrap;
+
+}
 
 .ds-options-menu-form {
-	margin-top: -35px;
+	/*margin-top: -35px;*/
 }
 
 
@@ -438,31 +504,33 @@ padding: 5px;
 vertical-align: top;
 margin: 0;
 }
-table.ds-options-menu-table {
+div.ds-options-menu-wrap {
 	margin: 0;
 	padding: 0px;
+	position: fixed;
+
 }
-table.ds-options-menu-table td.ds-options-menu-section-td {
+div.ds-options-menu-wrap div.ds-options-menu {
 	vertical-align: top;
 	padding: 0px;
 	margin: 0;
-	width: 200px;
+
 	height: 100vh;
 	border-top: 2px solid black;
 	background-color: #2d2e39;
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list {
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list {
 	vertical-align: top;
 	margin: 0;
 	padding: 0px;
 	
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li{
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li{
 	vertical-align: top;
 	margin: 0;
 }
 
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button {
     background-color: inherit;
     color: white;
@@ -472,22 +540,22 @@ button.ds-section-menu-option-button {
 	padding: 0px;
 }
 
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button:hover {
     background-color: #6e2aa2;
     color: #1a1a1a;
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-icon:hover {
 
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-icon {
 	position: absolute;
 	margin-top: -10px;
 	margin-left: 5px;
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	position: absolute;
 	margin-top: -8px;
@@ -495,35 +563,37 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	font-weight: 600;
 }
 
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-option-section-expanded.ds-section-menu-option-button {
 	border-bottom: 2px solid #1a1a1a;
 
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button.active {
 	background-color: #8031bc;
 	color: white;
 }
-table.ds-options-menu-table td.ds-options-menu-section-td ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button.active div.ds-section-menu-option-icon {
 	color: white;
 }
 
-table.ds-options-menu-table td.ds-options-menu-section-td  ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 ul.ds-subsection-menu-ul li.ds-subection-menu-option-li
 {
    font-size: 12px;
    font-weight: 300;
 
 }
-table.ds-options-menu-table td.ds-options-menu-section-td  ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 ul.ds-subsection-menu-ul
 {
    margin-top: -3px;
    background-color: #1a1a1a;
 
 }
+
+
 .ds-custom-page-title {
 	width: 76vw;
 	background-color: #1a1a1a;
