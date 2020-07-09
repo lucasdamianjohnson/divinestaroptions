@@ -21,7 +21,6 @@
 			<description> This is a description for a checkbox.</description>
 	    </option>
 	    <option type="selectdropdown">
-	    	<title>Drown Down With Option Group</title>
 			<label>Drown Down With Option Group</label>
 			<name>selectdropdownoptiongroup</name>
 			<value>option5</value>
@@ -42,7 +41,6 @@
 			</so>
 	    </option>
 	    <option type="selectdropdown">
-	    	<title>Drown Down With Out Option Group</title>
 			<label>Drown Down With Out Option Group</label>
 			<name>selectdropdownoption</name>
 			<value>option3</value>
@@ -53,9 +51,23 @@
 				<o value='option3'>Option 3</o>
 				<o value='option4'>Option 4</o>
 			</so>
-
-
 	    </option>
+	    <option type='generic'>
+			<name>generic1</name>
+			<value>generic value 1</value>
+		</option>
+		<option type='formhtml'>
+			<value><![CDATA[
+				<tr><td>
+				<tr>
+		<th scope="row"><label for="generic1-id">Generic option test</label></th>
+		<td><input name="generic1" type="text" id="generic1-id"  value="" class="regular-text">
+		</tr>
+			</tr></td>
+			]]>
+			</value>
+		</option>
+
 		<subsection for='generaloptions' name="subsection1" title="Sub Section Options" icon="">
 			<option type="text">
 				<label>Sub test 1</label>
@@ -73,6 +85,20 @@
 		    </option>
 
 		</subsection>
+	</section>
+	<section for='generaloptions' name='optionspage' title="Just A Page" icon="">
+		<option type='formhtml'>
+			<value><![CDATA[
+				<tr><td>
+					<h2>Divine Star Options</h2>
+					<p align="center">
+					<img src="https://lukejohnson.media/wp-content/uploads/2020/07/logo-small.png" />
+					</p>
+			</tr></td>
+			]]>
+			</value>
+		</option>
+		
 	</section>
 	<section for='generaloptions' name="otheroptins" title="Other Options" icon="">
 		<option type="text">

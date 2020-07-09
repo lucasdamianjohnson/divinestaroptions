@@ -36,7 +36,11 @@ private $dso;
   	if($option['type'] == 'selectdropdown') {
   	return $this->select_dropdown_option($option,$this->dso->get_option((string)$option->name));
   		}
-
+  	if($option['type'] == 'formhtml') {
+  	return $option->value;
+  	}
+  	if($option['type'] == 'generic') { return '';}
+ 
   }
 
 
