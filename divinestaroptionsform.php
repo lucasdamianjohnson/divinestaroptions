@@ -214,9 +214,18 @@ HTML;
 		$form_html = '';
 		$i = 0;
 		$section_html = <<<HTML
-		<div class="ds-options-menu-wrap">
+		<div id='ds-options-menu-js-id' class="ds-options-menu-wrap ds-menu-open">
 		<div class='ds-options-menu'>
 		<ul class='ds-options-section-list'>
+		
+		<li  class='ds-options-menu-button-container'>
+			<button data-id='ds-options-menu-button' class='ds-section-menu-button ds-section-menu-option-top-level '>
+				<div class='ds-section-menu-option-icon dashicons-before dashicons-menu'></div>
+			</button>
+			<button data-id='ds-options-close-menu-button' class='ds-section-menu-button ds-section-menu-option-top-level '>
+				<div class='ds-section-menu-option-icon dashicons-before dashicons-no'></div>
+			</button>
+		</li>
 HTML;
 		
 		//$sections = $this->load_options_xml('divinestarbookingoptions');
@@ -313,6 +322,185 @@ HTML;
 private function get_javascript() {
    return <<<HTML
 <script type="text/javascript">
+
+//https://github.com/jfriend00/docReady
+(function(funcName, baseObj) {
+    "use strict";
+    // The public function name defaults to window.docReady
+    // but you can modify the last line of this function to pass in a different object or method name
+    // if you want to put them in a different namespace and those will be used instead of 
+    // window.docReady(...)
+    funcName = funcName || "docReady";
+    baseObj = baseObj || window;
+    var readyList = [];
+    var readyFired = false;
+    var readyEventHandlersInstalled = false;
+    
+    // call this when the document is ready
+    // this function protects itself against being called more than once
+    function ready() {
+        if (!readyFired) {
+            // this must be set to true before we start calling callbacks
+            readyFired = true;
+            for (var i = 0; i < readyList.length; i++) {
+                // if a callback here happens to add new ready handlers,
+                // the docReady() function will see that it already fired
+                // and will schedule the callback to run right after
+                // this event loop finishes so all handlers will still execute
+                // in order and no new ones will be added to the readyList
+                // while we are processing the list
+                readyList[i].fn.call(window, readyList[i].ctx);
+            }
+            // allow any closures held by these functions to free
+            readyList = [];
+        }
+    }
+    
+    function readyStateChange() {
+        if ( document.readyState === "complete" ) {
+            ready();
+        }
+    }
+    
+    // This is the one public interface
+    // docReady(fn, context);
+    // the context argument is optional - if present, it will be passed
+    // as an argument to the callback
+    baseObj[funcName] = function(callback, context) {
+        if (typeof callback !== "function") {
+            throw new TypeError("callback for docReady(fn) must be a function");
+        }
+        // if ready has already fired, then just schedule the callback
+        // to fire asynchronously, but right away
+        if (readyFired) {
+            setTimeout(function() {callback(context);}, 1);
+            return;
+        } else {
+            // add the function and context to the list
+            readyList.push({fn: callback, ctx: context});
+        }
+        // if document already ready to go, schedule the ready function to run
+        // IE only safe when readyState is "complete", others safe when readyState is "interactive"
+        if (document.readyState === "complete" || (!document.attachEvent && document.readyState === "interactive")) {
+            setTimeout(ready, 1);
+        } else if (!readyEventHandlersInstalled) {
+            // otherwise if we don't have event handlers installed, install them
+            if (document.addEventListener) {
+                // first choice is DOMContentLoaded event
+                document.addEventListener("DOMContentLoaded", ready, false);
+                // backup is window load event
+                window.addEventListener("load", ready, false);
+            } else {
+                // must be IE
+                document.attachEvent("onreadystatechange", readyStateChange);
+                window.attachEvent("onload", ready);
+            }
+            readyEventHandlersInstalled = true;
+        }
+    }
+})("docReady", window);
+
+	
+
+docReady(function() {
+
+
+	var menu_button = document.querySelector("button[data-id=ds-options-menu-button]");
+	var close_menu_button = document.querySelector("button[data-id=ds-options-close-menu-button]");
+	var menu_bar = document.getElementById('ds-options-menu-js-id');
+	menu_button.addEventListener("click", function() {
+			   addClass(menu_bar,' ds-menu-open ');
+  			   removeClass(menu_bar,'ds-menu-folded');
+  			   menu_button.style.display = "none";
+  			   close_menu_button.style.display = "block";
+	});
+	
+	close_menu_button.addEventListener("click", function() {
+			   removeClass(menu_bar,'ds-menu-open');
+			   addClass(menu_bar,' ds-menu-folded ');
+  			   
+  			   close_menu_button.style.display = "none";
+  			   menu_button.style.display = "block";
+	});
+
+
+		function check_menu() {
+
+			var width = window.innerWidth;
+	       if(width > 961) {
+	       	   if(!hasClass(menu_bar,'ds-menu-open')) {
+  			   addClass(menu_bar,' ds-menu-open ');
+  			   removeClass(menu_bar,'ds-menu-folded');
+  			   menu_button.style.display = "none";
+  			   close_menu_button.style.display = "none";
+  			   }
+	       } else if(width < 961) {
+	       	   if(!hasClass(menu_bar,'ds-menu-folded')) {
+	       	   addClass(menu_bar,' ds-menu-folded ');
+	       	   removeClass(menu_bar,'ds-menu-open');
+	       	   menu_button.style.display = "block";
+  			   close_menu_button.style.display = "none";
+	       	   }
+	       }
+
+		}
+
+		window.addEventListener("resize", function() {
+		check_menu();
+	});
+
+		check_menu();
+
+
+
+
+
+	console.log('doc is ready!');
+});
+
+
+function hasClass(element, class_name) {
+    return (' ' + element.className + ' ').indexOf(' ' + class_name+ ' ') > -1;
+}
+
+function removeClass(element,remove_class) {
+
+  var re = new RegExp(remove_class,"g");
+  element.className = element.className.replace(re, "");
+
+}
+
+function addClass(element,add_class) {
+
+  classes = element.className.split(" ");
+  if (classes.indexOf(add_class) == -1) {
+    element.className += " " + add_class;
+  }
+
+}
+
+function toggleClass(element,toggle_class) { 
+
+if (element.classList) {
+  element.classList.toggle(toggle_class);
+} else {
+  // For IE9
+  var classes = element.className.split(" ");
+  var i = classes.indexOf(toggle_class);
+
+  if (i >= 0)
+    classes.splice(i, 1);
+  else
+    classes.push(toggle_class);
+    element.className = classes.join(" ");
+}
+
+}
+
+
+
+
+
 	 jQuery(document).ready(function($) {
 
 	 	$(".ds-options-menu-form").submit(function(event) {
@@ -359,7 +547,15 @@ private function get_javascript() {
 
        $(".ds-section-menu-option-button").click(function(event){
        		event.preventDefault();
+
+
        		var id = $(this).attr("data-id"); 
+       			console.log(id);
+       		if(id == 'ds-options-menu-button' || id == 'ds-options-close-menu-button' ) {
+                console.log('pressed menu button!');
+       			return;
+       		}
+
        		$(".ds-section-menu-option-button").each(function() {
        			$(this).removeClass("active");
        		});
@@ -423,18 +619,22 @@ private function get_css() {
 	return <<<HTML
 <style type="text/css">
 
-ul {
+ul.ds-options-section-list {
   list-style: none;
 }
 
-@media (max-width:568px) {
+@media (max-width:961px) {
 
+button[data-id=ds-options-menu-button] {
+	display: block;
+}
+button[data-id=ds-options-close-menu-button] {
+	display: none;
 }
 
 
-@media (max-width:961px) {
 
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	position: absolute;
 	margin-top: -8px;
@@ -449,7 +649,7 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 
 	}
 
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button.ds-section-menu-option-top-level div.ds-section-menu-option-text {
 	visibility: hidden;
 }
@@ -458,14 +658,14 @@ div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list {
 	z-index: 999;
 }
 
-div.ds-options-menu-wrap div.ds-options-menu 
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul
 {
   transition: 0.2s 1s; 
   visibility: hidden;
   display: none !important;
 }
-div.ds-options-menu-wrap div.ds-options-menu 
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul:hover
 {
     visibility: visible;
@@ -480,17 +680,17 @@ ul.ds-subsection-menu-ul:hover
   z-index: 999;
 
 }
-div.ds-options-menu-wrap div.ds-options-menu 
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul:hover  ~ ul.ds-options-section-list li.ds-section-menu-option-li  button.ds-section-menu-option-top-level div.ds-section-menu-option-text
 {
    width: 200px;
   
 }
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover
 {
 width: 200px;
 }
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover button.ds-section-menu-option-top-level
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover button.ds-section-menu-option-top-level
 div.ds-section-menu-option-text
 {
 color: white;
@@ -500,7 +700,7 @@ width: 200px;
 }
 
 
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
    ul.ds-subsection-menu-ul:first-of-type
 {
   visibility: visible;
@@ -531,7 +731,32 @@ div.ds-form-container {
 }
 
 @media (min-width:961px) {
-div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
+button[data-id=ds-options-menu-button] {
+	display: none !important;
+}
+button[data-id=ds-options-close-menu-button] {
+	display: none !important;
+}
+div.ds-options-menu-wrap.ds-menu-open {
+		left: 160px;
+
+	}
+
+
+
+	div.ds-form-container {
+		margin-left: 200px;
+	}
+div.ds-options-menu-wrap.ds-menu-open div.ds-options-menu 
+ul.ds-subsection-menu-ul
+{
+  display: block;
+
+}
+
+}
+
+div.ds-options-menu-wrap.ds-menu-open div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	position: absolute;
 	margin-top: -8px;
@@ -539,25 +764,10 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	font-weight: 600;
 }
 	
-	div.ds-options-menu-wrap {
-		left: 160px;
+	div.ds-options-menu-wrap.ds-menu-open {
+	
 		width: 200px;
 	}
-
-	div.ds-form-container {
-		margin-left: 200px;
-	}
-div.ds-options-menu-wrap div.ds-options-menu 
-ul.ds-subsection-menu-ul
-{
-  display: block;
-
-}
-
-
-
-
-}
 
 @media (max-width:781px) {
 
@@ -638,6 +848,18 @@ button.ds-section-menu-option-button {
 	height: 30px;
 	padding: 0px;
 }
+
+div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-options-menu-button-container
+button.ds-section-menu-button {
+background-color: inherit;
+    color: white;
+    border: 0;
+	width: 100%;
+	height: 30px;
+	padding: 0px;
+}
+
+
 
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button:hover {
