@@ -28,21 +28,6 @@ class DivineStarOptions
 	function load_options($options) {
 		$this->unset_options();
 		$this->loaded_options = $this->load_value_json($options);
-	//print_r($this->loaded_options);
-
-	/*
-		$dsbfo = array();
-
-				$i = 0;
-	$sections = $this->load_options_xml('bookingformoptions.xml');
-		foreach($sections->section as $section) {
-				foreach($section->option as $key => $option){
-					$dsbfo["$option->name"] = "$option->value";
-
-				}
-			}
-	    $this->dsbfo = $dsbfo;
-    */
 	}
 	private function get_loaded_options() {
 
@@ -68,9 +53,8 @@ class DivineStarOptions
 
 
 
-	function load_into_files() {
+	function load_into_files($xml) {
 		$json = array("json_name"=>"generaloptions");
-		echo 'loading into files!';
 
 		$sections = $this->load_options_xml('divinestarbookingoptions');
 		$i = 0;

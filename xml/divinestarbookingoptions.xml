@@ -20,6 +20,42 @@
 			<value>true</value>
 			<description> This is a description for a checkbox.</description>
 	    </option>
+	    <option type="selectdropdown">
+	    	<title>Drown Down With Option Group</title>
+			<label>Drown Down With Option Group</label>
+			<name>selectdropdownoptiongroup</name>
+			<value>option5</value>
+			<description> This is a description for a select.</description>
+			<so>
+				<sog label='Group 1'>
+					<o value='option1'>Option 1</o>
+					<o value='option2'>Option 2</o>
+					<o value='option3'>Option 3</o>
+					<o value='option4'>Option 4</o>
+				</sog>
+				<sog label='Group 2'>
+					<o value='option5'>Option 5</o>
+					<o value='option6'>Option 6</o>
+					<o value='option7'>Option 7</o>
+					<o value='option8'>Option 8</o>
+				</sog>
+			</so>
+	    </option>
+	    <option type="selectdropdown">
+	    	<title>Drown Down With Out Option Group</title>
+			<label>Drown Down With Out Option Group</label>
+			<name>selectdropdownoption</name>
+			<value>option3</value>
+			<description> This is a description for a select.</description>
+			<so>
+				<o value='option1'>Option 1</o>
+				<o value='option2'>Option 2</o>
+				<o value='option3'>Option 3</o>
+				<o value='option4'>Option 4</o>
+			</so>
+
+
+	    </option>
 		<subsection for='generaloptions' name="subsection1" title="Sub Section Options" icon="">
 			<option type="text">
 				<label>Sub test 1</label>

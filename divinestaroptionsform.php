@@ -33,8 +33,87 @@ private $dso;
   	return $this->check_box_option($option,$this->dso->get_option((string)$option->name));
   		}
 
+  	if($option['type'] == 'selectdropdown') {
+  	return $this->select_dropdown_option($option,$this->dso->get_option((string)$option->name));
+  		}
+
   }
 
+
+  	private function select_dropdown_option($option,$value) {
+			$name = $option->name;
+		$title = $option->title;
+		$label = $option->label;
+		$description = $option->description;
+        
+        $did = '';$ds = '';$dad = '';
+		if($description != '') {
+		$did = $option->name . '-description';
+		$ds = <<<HTML
+		<p class="description" id="{$did}">$description</p>
+HTML;
+		$dad = "aria-describedby='$did'";
+		}
+
+
+		$o_html = '';
+		foreach ($option->so->sog as $sog) {
+			$glabel = $sog['label'];
+			$o_html .= <<<HTML
+			<optgroup label='{$glabel}'>
+HTML;
+
+			foreach($sog->o as $o ) {
+			$ov = $o['value'];
+			$ot = (string) $o;
+
+			if($ov == $value) {
+				$selected = 'selected="selected"';
+			} else {
+				$selected = '';
+			}
+			$o_html .= <<<HTML
+			<option {$selected} value='{$ov}'>$ot</option>
+HTML;
+			}	
+
+			$o_html .= <<<HTML
+			<optgroup>
+HTML;	
+		}
+
+		foreach ($option->so->o as $o) {
+			$ov = $o['value'];
+			$ot = (string) $o;
+
+			if($ov == $value) {
+				$selected = 'selected="selected"';
+			} else {
+				$selected = '';
+			}
+			$o_html .= <<<HTML
+			<option {$selected} value='{$ov}'>$ot</option>
+HTML;
+		}
+
+		return <<<HTML
+<tr>
+<th scope="row"><label for="{$name}-id">$label</label></th>
+<td>
+
+<select id="{$name}-id" name="{$name}"  value="{$value}" {$dad}>
+$o_html 
+</select>
+$ds
+</td>
+
+</tr>
+HTML;
+
+
+
+
+  	}
 
 	private function number_option($option,$value) {
 		$name = $option->name;
@@ -51,6 +130,12 @@ private $dso;
 		</tr>
 HTML;
 	}
+
+
+
+
+
+
 
 	private function check_box_option($option,$value) {
 		$name = $option->name;
