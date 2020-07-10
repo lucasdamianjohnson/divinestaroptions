@@ -1,5 +1,15 @@
 # Divine Star Options
 
+<p  align="center">
+<h1 style='text-align:center;'> Divine Star Options </h1>
+</p>
+
+<p align="center">
+  <img src="https://lukejohnson.media/wp-content/uploads/2020/07/logo-small.png" />
+</p>
+
+## The Divine Star Options Form
+
 <p align="center">
   <img src="https://lukejohnson.media/wp-content/uploads/2020/07/divinestar_options_2.png" />
 </p>
