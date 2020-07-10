@@ -404,6 +404,7 @@ HTML;
 
 			$title =  $section['title'];
 			$name =  $section['name'];
+			$icon = $section['icon'];
 			$going_to = $section['for'];
 			if($i == 0) {
 				$eclass = 'ds-option-section-expanded active';
@@ -456,7 +457,7 @@ HTML;
 			
 			$section_html .= <<<HTML
 
-			<li id='{$name}' class='ds-section-menu-option-li '><button data-id='{$name}' class='ds-section-menu-option-button ds-section-menu-option-top-level {$buttoneclass} {$eclass}'><div class='ds-section-menu-option-icon dashicons-before dashicons-star-empty'></div><div class='ds-section-menu-option-text'>$title</div></button>$sshtml</li>
+			<li id='{$name}' class='ds-section-menu-option-li '><button data-id='{$name}' class='ds-section-menu-option-button ds-section-menu-option-top-level {$buttoneclass} {$eclass}'><div class='ds-section-menu-option-icon dashicons-before {$icon}'></div><div class='ds-section-menu-option-text'>$title</div></button>$sshtml</li>
 HTML;
 			
 			
