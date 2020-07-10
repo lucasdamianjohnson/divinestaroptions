@@ -22,8 +22,8 @@ Some key design princples that are being follwed for this.
     + You can also store different sets of options in different files. Load what you need when you need it. 
 * Build the form and data structures from XML.
 * The options form will be made with plain JavaScript.
-    + In early development some code may be jQuery and then move to JS. 
-    + This is done to future proof the design for the coming years. 
+    + In early development some code may be jQuery and then converted to JS. 
+    + This is will be done to future proof the design for the coming years. 
 
 
 
