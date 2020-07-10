@@ -7,6 +7,30 @@
 Currently under development. 
 This will be a simple WordPress theme or plugins options framework.
 
+
+**Important Note**
+
+Just to be clear. Do not use this to store important information such as passwords or emails. This is mostly for styling options or basic settings. Since all the data is stored in JSON in plain text. 
+
+
+Some key design princples that are being follwed for this. 
+
+* Make the workflow and integration easy and intuitive. 
+* Make it very easy to customize and add custom option types. 
+* Ensure the form is accessible and is up to WordPress standards. 
+* Store all data in JSON.
+    + You can also store different sets of options in different files. Load what you need when you need it. 
+* Build the form and data structures from XML.
+* The options form will be made with plain JavaScript.
+    + In early development some code may be jQuery and then move to JS. 
+    + This is done to future proof the design for the coming years. 
+
+
+
+  
+
+
+
 # Installing
 This process will change as the development goes along. But as of now all you need to do is download the code and put it in your theme's or plugin's folder. 
 
