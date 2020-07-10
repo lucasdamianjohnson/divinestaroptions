@@ -101,6 +101,3 @@ $dsbof->get_options_form('generaloptions');
 add_action( 'wp_ajax_divine_star_updateoptions', array( $dsbo,'update_options') );
 ``` 
 
-
-
-![Divine Star Options ](https://lukejohnson.media/wp-content/uploads/2020/07/divinestaroptions_image_1.png)
