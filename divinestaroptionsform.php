@@ -1,11 +1,77 @@
 <?php 
-
+include('divinestaroptionscustomsfunctions.php');
 
 
 class DivineStarOptionsForm
 {
 	
 private $dso;
+private $dsocf;
+
+    function __construct() {
+    	$this->dsocf = new DivineStarOptionsCustomFunctions;
+
+        add_action( 'wp_ajax_divine_star_update_image_form', array( $this,'update_image_upload') );
+    }
+
+
+
+
+ function update_image_upload() {
+ 
+	 if(isset($_GET['imgid']) ){
+       $id = $_GET['imgid'];
+	 } else {
+	  wp_send_json_error();
+	  die();
+	 }
+	 if(isset($_GET['size']) ){
+       $size = $_GET['size'];
+	 } else {
+	  wp_send_json_error();
+	  die();
+	 }
+	 $osize = $size;
+	 if(count(explode(" ", $size)) > 1) {
+	 	$size = explode(" ", $size);
+	 }
+
+
+	 $imgdata = $this->wp_get_attachment( $id );
+	 $src = wp_get_attachment_image_src( $id,  $size)[0];
+	 $orgimage = wp_get_attachment_image_src( $id,  'full');
+	 $orgimage_src =  $orgimage[0];
+	 $orgimage_width =  $orgimage[1];
+	 $orgimage_height =  $orgimage[2];
+
+   	 $data = $this->dso->get_json_data_structure('singleimage',
+   			[$id,
+   			$orgimage_src,
+   			$osize,
+   			$src,
+   			$imgdata['alt'],
+   			$imgdata['title'],
+   			$imgdata['caption'],
+   			$imgdata['description'],
+   			$orgimage_width,
+   			$orgimage_height
+   		   ],
+   		   "wp"
+   		);
+      
+      wp_send_json_success( $data );
+
+    
+}
+
+
+    function enqueue_scripts() {
+      wp_enqueue_media();
+      wp_enqueue_script('dsoption_form_functions',plugins_url('assets/js/functions.js',__FILE__) );
+      wp_enqueue_script('dsoption_form_js',plugins_url('assets/js/form.js',__FILE__) );
+     // wp_enqueue_script('dsoption_form_functions',OPTIONS_PATH.'assets/js/functions.js' );
+     // wp_enqueue_script('dsoption_form_main',OPTIONS_PATH.'assets/js/form.js' );
+    }
 
 
 	function set_options($dso) {
@@ -36,16 +102,119 @@ private $dso;
   	if($option['type'] == 'selectdropdown') {
   	return $this->select_dropdown_option($option,$this->dso->get_option((string)$option->name));
   		}
+
+  	if($option['type'] == 'singleimage') {
+  		return $this->single_image_option($option,$this->dso->get_option((string)$option->name));
+  	} 
+
   	if($option['type'] == 'formhtml') {
   	return $option->value;
   	}
+
+  	if($option['type'] == 'custom_function') { 
+  		return $this->custom_function_option($option);
+  	}
+
   	if($option['type'] == 'generic') { return '';}
- 
+    
   }
+
+  private function wp_get_attachment( $attachment_id ) {
+
+$attachment = get_post( $attachment_id );
+return array(
+    'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
+    'caption' => $attachment->post_excerpt,
+    'description' => $attachment->post_content,
+    'href' => get_permalink( $attachment->ID ),
+    'src' => $attachment->guid,
+    'title' => $attachment->post_title
+);
+}
+
+  	private function single_image_option($option,$value) {
+  		
+  		$name = $option->name;
+		$title = $option->title;
+		$size = (string) $option->size;
+		$label = $option->label;
+		$description = $option->description;
+		$osize = $size;
+		if(count(explode(" ", $size)) > 1) {
+		$size = explode(" ", $size);
+		} 
+
+		$value = $value['id'];
+
+		if($value !== "") {
+
+		$post = implode(',',$this->wp_get_attachment($value));
+		$imgdata = $this->wp_get_attachment($value);
+		
+		$src = wp_get_attachment_image_src( $value,  $size)[0];
+      	$orgimage = wp_get_attachment_image_src( $value,  'full');
+      	$orgimage_src =  $orgimage[0];
+      	$orgimage_width =  $orgimage[1];
+      	$orgimage_height =  $orgimage[2];
+
+        } else {
+        	$imgdata = array();
+        	$orgimage_src = $orgimage_width = 
+        	$orgimage_height = $imgdata['alt'] = $imgdata['title'] =
+        	$imgdata['caption'] = $imgdata['description'] = 
+        	$src = $osize =
+        	 "";
+
+
+        }
+
+      	$id = "divinestaroptions[singleimage][$name]";
+		return <<<HTML
+		<tr>
+		<th scope="row">
+		<div class="">$label $value</div>
+		</th>
+		<td>
+	
+		<fieldset id="porto_settings-logo" class="" >
+		
+		<input placeholder="No media selected" type="text" class="upload large-text " name="{$id}[orgsrc]" id="{$id}[orgsrc]" value="{$orgimage_src}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[id]" id="{$id}[id]" value="{$value}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[mode]" id="{$id}[mode]" value="wp">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden" name="{$id}[src]" id="{$id}[src]" value="{$src}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden" name="{$id}[size]" id="{$id}[size]" value="{$osize}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[orgheight]" id="{$id}[orgheight]" value="{$orgimage_height}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[orgwidth]" id="{$id}[orgwidth]" value="{$orgimage_width}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[title]" id="{$id}[title]" value="{$imgdata['title']}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[caption]" id="{$id}[caption]" value="{$imgdata['caption']}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[alt]" id="{$id}[alt]" value="{$imgdata['alt']}">
+		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[description]" id="{$id}[description]" value="{$imgdata['description']}">
+		<div class="screenshot">
+		<a class="" href="{$src}" target="_blank">
+		<img class="" id="{$id}-image" src="{$src}" alt="" target="_blank" rel="external">
+		</a>
+		</div>
+		<div class="">
+		<span data-for='{$id}' class="button button-primary ds-options-upload-single-image-button" id="logo-media">Add</span>
+		<span data-for='{$id}' class="button ds-options-remove-single-image-button" id="reset_logo" rel="logo">Remove</span>
+		</div>
+		</fieldset>
+		</td>
+		</tr>
+
+HTML;
+
+  	}
+
+
+    private function custom_function_option($option) {
+
+    	return call_user_func(array($this->dsocf, (string)$option->function),$option);
+    }
 
 
   	private function select_dropdown_option($option,$value) {
-			$name = $option->name;
+		$name = $option->name;
 		$title = $option->title;
 		$label = $option->label;
 		$description = $option->description;
@@ -105,7 +274,7 @@ HTML;
 <th scope="row"><label for="{$name}-id">$label</label></th>
 <td>
 
-<select id="{$name}-id" name="{$name}"  value="{$value}" {$dad}>
+<select id="{$name}-id" name="divinestaroptions[selectdropdown][{$name}]"  value="{$value}" {$dad}>
 $o_html 
 </select>
 $ds
@@ -129,7 +298,7 @@ HTML;
 
 		<tr>
 		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="{$name}" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+		<td><input name="divinestaroptions[number][{$name}]" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
 		<p class="description" id="{$did}">$description</p></td>
 		</tr>
 HTML;
@@ -166,7 +335,7 @@ HTML;
 		<tr>
 		<th scope="row">$title</th>
 		<td> <fieldset><legend class="screen-reader-text"><span>$title</span></legend><label for="{$name}-id">
-		<input name="{$name}" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
+		<input name="divinestaroptions[checkbox][{$name}]" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
 		</fieldset>
 		$ds
 		</td>
@@ -184,7 +353,7 @@ HTML;
 
 		<tr>
 		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="{$name}" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+		<td><input name="divinestaroptions[text][{$name}]" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
 		<p class="description" id="{$did}">$description</p></td>
 		</tr>
 HTML;
@@ -198,10 +367,11 @@ HTML;
 HTML;  
 	}
 	private function option_form_end($name) {
+		$id = substr(md5(time()), 0, 16);
 		return <<<HTML
 		</tbody>
 		</table>
-		<p class="submit"><input type="submit" name="submit" id="{$name}-form-submit" class="button button-primary" value="Save Changes"></p>
+		<p class="submit"><!--<input type="clear" class="button" value="Clear Changes">--><input type="submit"   class="button button-primary" value="Save Changes"></p>
 		</form>
 HTML;	
 	}
@@ -246,7 +416,7 @@ HTML;
 			$form_html .= $this->option_form_start($name,$title,$style,$going_to);		 
 			$i++;
 			foreach($section->option as $key => $option){
-				
+		
 		
 					 $form_html .= $this->get_option_html($option); 
 				
@@ -319,296 +489,12 @@ HTML;
 	}
 
 
+
+
 private function get_javascript() {
    return <<<HTML
 <script type="text/javascript">
 
-
-
-//https://github.com/jfriend00/docReady
-(function(funcName, baseObj) {
-    "use strict";
-    // The public function name defaults to window.docReady
-    // but you can modify the last line of this function to pass in a different object or method name
-    // if you want to put them in a different namespace and those will be used instead of 
-    // window.docReady(...)
-    funcName = funcName || "docReady";
-    baseObj = baseObj || window;
-    var readyList = [];
-    var readyFired = false;
-    var readyEventHandlersInstalled = false;
-    
-    // call this when the document is ready
-    // this function protects itself against being called more than once
-    function ready() {
-        if (!readyFired) {
-            // this must be set to true before we start calling callbacks
-            readyFired = true;
-            for (var i = 0; i < readyList.length; i++) {
-                // if a callback here happens to add new ready handlers,
-                // the docReady() function will see that it already fired
-                // and will schedule the callback to run right after
-                // this event loop finishes so all handlers will still execute
-                // in order and no new ones will be added to the readyList
-                // while we are processing the list
-                readyList[i].fn.call(window, readyList[i].ctx);
-            }
-            // allow any closures held by these functions to free
-            readyList = [];
-        }
-    }
-    
-    function readyStateChange() {
-        if ( document.readyState === "complete" ) {
-            ready();
-        }
-    }
-    
-    // This is the one public interface
-    // docReady(fn, context);
-    // the context argument is optional - if present, it will be passed
-    // as an argument to the callback
-    baseObj[funcName] = function(callback, context) {
-        if (typeof callback !== "function") {
-            throw new TypeError("callback for docReady(fn) must be a function");
-        }
-        // if ready has already fired, then just schedule the callback
-        // to fire asynchronously, but right away
-        if (readyFired) {
-            setTimeout(function() {callback(context);}, 1);
-            return;
-        } else {
-            // add the function and context to the list
-            readyList.push({fn: callback, ctx: context});
-        }
-        // if document already ready to go, schedule the ready function to run
-        // IE only safe when readyState is "complete", others safe when readyState is "interactive"
-        if (document.readyState === "complete" || (!document.attachEvent && document.readyState === "interactive")) {
-            setTimeout(ready, 1);
-        } else if (!readyEventHandlersInstalled) {
-            // otherwise if we don't have event handlers installed, install them
-            if (document.addEventListener) {
-                // first choice is DOMContentLoaded event
-                document.addEventListener("DOMContentLoaded", ready, false);
-                // backup is window load event
-                window.addEventListener("load", ready, false);
-            } else {
-                // must be IE
-                document.attachEvent("onreadystatechange", readyStateChange);
-                window.attachEvent("onload", ready);
-            }
-            readyEventHandlersInstalled = true;
-        }
-    }
-})("docReady", window);
-
-	
-
-docReady(function() {
-
-
-	var menu_button = document.querySelector("button[data-id=ds-options-menu-button]");
-	var close_menu_button = document.querySelector("button[data-id=ds-options-close-menu-button]");
-	var menu_bar = document.getElementById('ds-options-menu-js-id');
-	menu_button.addEventListener("click", function() {
-			   addClass(menu_bar,' ds-menu-open ');
-  			   removeClass(menu_bar,'ds-menu-folded');
-  			   menu_button.style.display = "none";
-  			   close_menu_button.style.display = "block";
-	});
-	
-	close_menu_button.addEventListener("click", function() {
-			   removeClass(menu_bar,'ds-menu-open');
-			   addClass(menu_bar,' ds-menu-folded ');
-  			   
-  			   close_menu_button.style.display = "none";
-  			   menu_button.style.display = "block";
-	});
-
-
-		function check_menu() {
-
-			var width = window.innerWidth;
-	       if(width > 961) {
-	       	   if(!hasClass(menu_bar,'ds-menu-open')) {
-  			   addClass(menu_bar,' ds-menu-open ');
-  			   removeClass(menu_bar,'ds-menu-folded');
-  			   menu_button.style.display = "none";
-  			   close_menu_button.style.display = "none";
-  			   }
-	       } else if(width < 961) {
-	       	   if(!hasClass(menu_bar,'ds-menu-folded')) {
-	       	   addClass(menu_bar,' ds-menu-folded ');
-	       	   removeClass(menu_bar,'ds-menu-open');
-	       	   menu_button.style.display = "block";
-  			   close_menu_button.style.display = "none";
-	       	   }
-	       }
-
-		}
-
-		window.addEventListener("resize", function() {
-		check_menu();
-	});
-
-		check_menu();
-
-
-
-
-
-	console.log('doc is ready!');
-});
-
-
-function hasClass(element, class_name) {
-    return (' ' + element.className + ' ').indexOf(' ' + class_name+ ' ') > -1;
-}
-
-function removeClass(element,remove_class) {
-
-  var re = new RegExp(remove_class,"g");
-  element.className = element.className.replace(re, "");
-
-}
-
-function addClass(element,add_class) {
-
-  classes = element.className.split(" ");
-  if (classes.indexOf(add_class) == -1) {
-    element.className += " " + add_class;
-  }
-
-}
-
-function toggleClass(element,toggle_class) { 
-
-if (element.classList) {
-  element.classList.toggle(toggle_class);
-} else {
-  // For IE9
-  var classes = element.className.split(" ");
-  var i = classes.indexOf(toggle_class);
-
-  if (i >= 0)
-    classes.splice(i, 1);
-  else
-    classes.push(toggle_class);
-    element.className = classes.join(" ");
-}
-
-}
-
-
-
-
-
-	 jQuery(document).ready(function($) {
-
-	 	$(".ds-options-menu-form").submit(function(event) {
-	 		event.preventDefault();
-	 		console.log("the form submited");
-	 		var data = $(this).serializeArray(); 
-	 		$(this).find('input[type="checkbox"]').each(function(){
-	 		      if( !$(this).is(":checked")) {
-	 		      	var name = $(this).attr('name');
-	 		      	console.log(name);
-	 		      	data.push({
-	 		      		name:name,
-	 		      		value: ''
-	 		      	});
-	 		      }
-	 		});
-	 		var data = JSON.stringify(data);
-	 		var going_to = $(this).attr('data-going-to');
-	 
-	 		var send = {
-	 			action: 'divine_star_updateoptions',
-	 			going_to: going_to,
-	 			data: data
-	 		}
-	 		$.ajax({ 
-	 			type: 'post',
-	 			url:ajaxurl,
-	 			data:send,
-	 			success: function(data){
-	 				console.log(data);
-	 			},error: function(data) {
-	 				console.log('there was an error');
-	 				console.log(data);
-
-	 			}
-
-
-	 		}); 
-
-
-
-
-	 	});
-
-       $(".ds-section-menu-option-button").click(function(event){
-       		event.preventDefault();
-
-
-       		var id = $(this).attr("data-id"); 
-       			console.log(id);
-       		if(id == 'ds-options-menu-button' || id == 'ds-options-close-menu-button' ) {
-                console.log('pressed menu button!');
-       			return;
-       		}
-
-       		$(".ds-section-menu-option-button").each(function() {
-       			$(this).removeClass("active");
-       		});
-       		$(this).addClass('active');
-
-       	   if($(this).hasClass("ds-section-menu-option-top-level")) {	
-       		if($(this).hasClass("ds-section-optoin-has-submenu")) {
-    
-       			$(".ds-section-menu-option-button.ds-section-menu-option-top-level").each(function(event){
-       				$(this).removeClass('ds-option-section-expanded');
-       			}); 
-       			$(this).addClass('ds-option-section-expanded');
-       		} else {
-       			$(".ds-section-menu-option-button.ds-section-menu-option-top-level").each(function(event){
-       				$(this).removeClass('ds-option-section-expanded');
-       			}); 
-       		}
-       	   }
-
-       		if($(this).hasClass("ds-section-menu-option-top-level")) {	
-    
-       		$("form.ds-options-menu-form").each(function(){
-       			var fid = $(this).attr("id");
-       			var forid = $(this).attr("data-for");
-       			if(fid == id+'-form') {
-       			$("#"+forid+" .ds-subsection-menu-ul").css("display","block");	
-       			$(this).css("display","block");
-       			} else {
-       			$("#"+forid+" .ds-subsection-menu-ul").css("display","none");	
-       			$(this).css("display","none");
-       			}
-
-       		});
-       		} else {
-       		$("form.ds-options-menu-form").each(function(){
-       			var fid = $(this).attr("id");
-       			var forid = $(this).attr("data-for");
-       			if(fid == id+'-form') {
-       			$(this).css("display","block");
-       			} else {
-       			$(this).css("display","none");
-       			}
-
-       		});
-
-
-       	 }
-
-       });
-
-	 });
 
 </script>
 
@@ -685,7 +571,10 @@ ul.ds-subsection-menu-ul:hover
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul:hover  ~ ul.ds-options-section-list li.ds-section-menu-option-li  button.ds-section-menu-option-top-level div.ds-section-menu-option-text
 {
-   width: 200px;
+   color: white;
+width: 200px;
+  visibility: visible !important;
+ display: block !important;
   
 }
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover
@@ -701,7 +590,6 @@ width: 200px;
  display: block !important;
 }
 
-
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
    ul.ds-subsection-menu-ul:first-of-type
 {
@@ -715,6 +603,13 @@ div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-sectio
   top: auto;
   z-index: 999;
   display: block !important;
+}
+
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
+   ul.ds-subsection-menu-ul li.ds-subection-menu-option-li
+{
+   margin: 0;
+   padding: 0px;
 }
 /*
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
@@ -849,6 +744,7 @@ button.ds-section-menu-option-button {
 	width: 100%;
 	height: 30px;
 	padding: 0px;
+	margin: 0;
 }
 
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-options-menu-button-container
@@ -911,19 +807,6 @@ ul.ds-subsection-menu-ul
 }
 
 
-.ds-custom-page-title {
-	width: 100%;
-	background-color: #1a1a1a;
-    height: 50px;
-    margin: 0;
-    padding: 50px;
-	text-align: center;
-}
-.ds-custom-page-title h2 {
-	color: #8031bc;
-	margin-top: 10px;
-	font-size: 30px;
-}
 </style>
 HTML;	
 	}

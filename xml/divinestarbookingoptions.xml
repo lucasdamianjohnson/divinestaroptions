@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Divine Star Options 
+-->
 <divinestarbookingformoptions>
 	<section for='generaloptions' name="mainoptins" title="Main Options" icon="">
 		<option type="text">
@@ -7,6 +10,18 @@
 			<value>#1a1a1a</value>
 			<description> This is the first test option. </description>
 		</option>
+		<option type="selectdropdown">
+			<label>Drop Down With Out Option Group</label>
+			<name>selectdropdownoption</name>
+			<value>option3</value>
+			<description> This is a description for a select.</description>
+			<so>
+				<o value='option1'>Option 1</o>
+				<o value='option2'>Option 2</o>
+				<o value='option3'>Option 3</o>
+				<o value='option4'>Option 4</o>
+			</so>
+	    </option>
 		<option type="text">
 			<label>Test 2</label>
 			<name>test2</name>
@@ -15,13 +30,25 @@
 		</option>
 		 <option type="checkbox">
 	    	<title>Check box test</title>
-			<label>Sub test 3</label>
+			<label>This is a checkbox</label>
 			<name>checkboxtest1</name>
 			<value>true</value>
 			<description> This is a description for a checkbox.</description>
 	    </option>
+	    <option type="singleimage" mode="wp" >
+	    	<name>logo</name>
+	    	<label>logo</label>
+	    	<value>11</value>
+	    	<size>150 150</size>
+	    </option>
+	    <option type="singleimage" mode="wp" >
+	    	<name>otherlogo</name>
+	    	<label>other logo</label>
+	    	<value>11</value>
+	    	<size>150 150</size>
+	    </option>
 	    <option type="selectdropdown">
-			<label>Drown Down With Option Group</label>
+			<label>Drop Down With Option Group</label>
 			<name>selectdropdownoptiongroup</name>
 			<value>option5</value>
 			<description> This is a description for a select.</description>
@@ -40,28 +67,21 @@
 				</sog>
 			</so>
 	    </option>
-	    <option type="selectdropdown">
-			<label>Drown Down With Out Option Group</label>
-			<name>selectdropdownoption</name>
-			<value>option3</value>
-			<description> This is a description for a select.</description>
-			<so>
-				<o value='option1'>Option 1</o>
-				<o value='option2'>Option 2</o>
-				<o value='option3'>Option 3</o>
-				<o value='option4'>Option 4</o>
-			</so>
-	    </option>
+	
 	    <option type='generic'>
 			<name>generic1</name>
 			<value>generic value 1</value>
 		</option>
+		<!--
+		<option type='custom_function'>
+			<function>first_function</function>
+		</option>-->
 		<option type='formhtml'>
 			<value><![CDATA[
 				<tr><td>
 				<tr>
 		<th scope="row"><label for="generic1-id">Generic option test</label></th>
-		<td><input name="generic1" type="text" id="generic1-id"  value="" class="regular-text">
+		<td><input name="divinestaroptions['generic'][generic1]" type="text" id="generic1-id"  value="" class="regular-text">
 		</tr>
 			</tr></td>
 			]]>
