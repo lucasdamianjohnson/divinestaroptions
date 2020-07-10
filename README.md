@@ -7,7 +7,7 @@
 ## The Divine Star Options Form
 
 <p align="center">
-  <img src="https://lukejohnson.media/wp-content/uploads/2020/07/divinestar_options_2.png" />
+  <img src="https://lukejohnson.media/wp-content/uploads/2020/07/divinestaroptions3.png" />
 </p>
 
 Currently under development. 
