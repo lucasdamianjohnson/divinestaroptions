@@ -140,15 +140,19 @@ function open_wpmedia(multiple,for_img) {
                           // On close, get selections and save to the hidden input
                           // plus other AJAX stuff to refresh the image preview
                           var selection =  image_frame.state().get('selection');
+                          console.log(selection);
                           var gallery_ids = new Array();
                           var my_index = 0;
                           selection.each(function(attachment) {
+                             console.log(attachment);
+                             console.log(attachment['id']);
                              gallery_ids[my_index] = attachment['id'];
                              my_index++;
                           });
                           var ids = gallery_ids.join(",");
                           console.log(ids);
                           //jQuery('input#myprefix_image_id').val(ids);
+                       
                           update_image(ids,for_img);
 
                           
@@ -209,16 +213,17 @@ function update_image(imgid,for_img){
         //console.log(xhr.responseText);
         var returndata = JSON.parse(xhr.responseText);
         console.log(returndata);
-        var id = returndata['data']['value']['id'];
-        var orgsrc = returndata['data']['value']['orgsrc'];
-        var size = returndata['data']['value']['size'];
-        var src = returndata['data']['value']['src'];
-        var alt = returndata['data']['value']['alt'];
-        var title = returndata['data']['value']['title'];
-        var caption = returndata['data']['value']['caption'];
-        var description = returndata['data']['value']['description'];
-        var orgwidth = returndata['data']['value']['orgwidth'];
-        var orgheight = returndata['data']['value']['orgheight'];
+        console.log(returndata['data']['id']);
+        var id = returndata['data']['id'];
+        var orgsrc = returndata['data']['orgsrc'];
+        var size = returndata['data']['size'];
+        var src = returndata['data']['src'];
+        var alt = returndata['data']['alt'];
+        var title = returndata['data']['title'];
+        var caption = returndata['data']['caption'];
+        var description = returndata['data']['description'];
+        var orgwidth = returndata['data']['orgwidth'];
+        var orgheight = returndata['data']['orgheight'];
 
 
         var img_put_id = for_img + "-image";
@@ -276,6 +281,7 @@ function update_image(imgid,for_img){
         data: data
       }
       */
+      console.log('updating images!!!');
       formData.append("action", "divine_star_updateoptions");
       formData.append("going_to", going_to);
       var xhr = new XMLHttpRequest();

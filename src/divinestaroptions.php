@@ -27,6 +27,12 @@ class DivineStarOptions
 	}
 
 
+	public function is_simple_type($type){
+		   return array_search($type, $this->simple_type ) !== false;
+	}
+
+
+
 	private function load_options_xml($going_to) {
 
 		return	simplexml_load_file(OPTIONS_PATH.'xml/'.$going_to.'.xml');
@@ -37,7 +43,7 @@ class DivineStarOptions
 
 		return json_decode(file_get_contents(OPTIONS_PATH.'data/'.$json.'.json'),true);
 	}
-	private function save_value_json($going_to,$data) {
+	public function save_value_json($going_to,$data) {
 
 		file_put_contents(OPTIONS_PATH.'data/'.$going_to.'.json', json_encode($data));
 	}
@@ -50,7 +56,7 @@ class DivineStarOptions
 	}
 
 
-	private function get_loaded_options() {
+	public function get_loaded_options() {
 
 		return $this->loaded_options;
 	}
@@ -65,17 +71,9 @@ class DivineStarOptions
 	}
 
 
-	private function set_option($name,$value) {
-	if(array_search($this->loaded_options[$name]['type'], $this->simple_type ) !== false) {
+	public function set_option($name,$value) {
+
 		return $this->loaded_options[$name]['value'] = $value;
-	}
-
-	if($this->loaded_options[$name]['type'] == 'singleimage') {
-		return $this->loaded_options[$name] = $value;	
-	}
-
-		return false;
-
 	}
 
 	private function unset_options() {
@@ -130,48 +128,6 @@ HTML;
 			}
 
 
-    			if($type == 'singleimage') {
-
-
-
-    			if($mode == "wp") {
-    				$imgvalue =array( 
-						'id' => $args[0],
-						'orgsrc' => $args[1],
-						'size' => $args[2],
-						'src' => $args[3],
-						'alt' => $args[4],
-						'title'=> $args[5],
-						'caption'=>$args[6],
-						'description'=>$args[7],
-						'orgwidth' =>$args[8],
-						'orgheight' => $args[9]
-					);
-				
-    			}
-    			if($mode == "url") {
-    				$imgvalue =array( 
-						'url' => $args[1],
-						'alt' => $args[2],
-						'title'=> $args[3],
-						'caption'=>$args[4],
-						'description'=>$args[5],
-						'width' =>$args[6],
-						'height' => $args[7]
-					);
-				
-    			}
-				$data = array( 
-					'value' => $imgvalue,
-					'type' => $type, 
-					'mode' => $mode
-				); 
-				if($mode == "wp") {
-					$data['mode-set'] = 'test';
-				}
-
-				return $data;
-			}
 
     }
 
@@ -209,84 +165,6 @@ HTML;
 		$this->save_value_json('generaloptions',$json);
 	}
 
-
-
-
-	function update_options() {
-	
-		if(isset($_POST['going_to'])) {
-			$going_to = $_POST['going_to'];
-		} else {
-			die();
-		}
-		if(!isset($_POST['divinestaroptions'])) {
-			die();
-		}
-
-
-	    $this->load_options($going_to);
-
-		$data = $_POST;
-		print_r($data);
-	    foreach ($data['divinestaroptions'] as $type => $typedata) {
-
-
-	    	foreach ($typedata as $key => $value) {
-	    			
-	    		if(array_search($type, $this->simple_type) !== false) {
-	    				echo "<h1>$type</h1>";
-	    			$this->set_option($key,$value);
-	    		}
-	    		if($type == 'singleimage') {
-	    			$mode = $value['mode'];
-	    			if($mode == "wp") {
-
-	    			$newvalue = $this->get_json_data_structure(
-	    				$type,
-	    			 	[
-	    			 	$value['id'],
-	    			 	$value['orgsrc'],
-	    			 	$value['size'],
-	    			 	$value['src'],
-	    			 	$value['alt'],
-	    			 	$value['title'],
-	    			 	$value['caption'],
-	    			 	$value['description'],
-	    			 	$value['orgwidth'],
-	    			 	$value['orgheight']
-	    			 ],
-	    			 $mode
-	    			);
-	    		    }
-	    		    if($mode == "url") {
-
-	    			$newvalue = $this->get_json_data_structure(
-	    				$type,
-	    			 	[
-	    			 	$value['url'],
-	    			 	$value['alt'],
-	    			 	$value['title'],
-	    			 	$value['caption'],
-	    			 	$value['description'],
-	    			 	$value['width'],
-	    			 	$value['height']
-	    			 ],
-	    			 $mode
-	    			);
-	    		    }
-	    			$this->set_option($key,$newvalue);
-	    		}
-
-
-
-	    	}
-
-
-	    }
-
-		$this->save_value_json($going_to,$this->get_loaded_options());
-
-	}
 
 
 

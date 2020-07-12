@@ -22,11 +22,11 @@ Divine Star Options
 				<o value='option4'>Option 4</o>
 			</so>
 	    </option>
-		<option type="text">
-			<label>Text Option 2</label>
-			<name>test2</name>
-			<value>what ever 2!</value>
-			<description> This is the second test option. </description>
+		<option type="number">
+			<label>Number Option</label>
+			<name>number1</name>
+			<value>5</value>
+			<description> This is a number option. </description>
 		</option>
 		 <option type="checkbox">
 	    	<title>Check box test</title>
@@ -81,7 +81,7 @@ Divine Star Options
 				<tr><td>
 				<tr>
 		<th scope="row"><label for="generic1-id">Generic option test</label></th>
-		<td><input name="divinestaroptions['generic'][generic1]" type="text" id="generic1-id"  value="" class="regular-text">
+		<td><input name="divinestaroptions[generic][generic1]" type="text" id="generic1-id"  value="" class="regular-text">
 		</tr>
 			</tr></td>
 			]]>

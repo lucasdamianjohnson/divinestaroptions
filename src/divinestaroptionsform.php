@@ -1,4 +1,7 @@
 <?php 
+
+
+include('optiontypes/Options.php');
 include('divinestaroptionscustomsfunctions.php');
 
 
@@ -7,12 +10,108 @@ class DivineStarOptionsForm
 	
 private $dso;
 private $dsocf;
+private $simple_types;
 
     function __construct() {
     	$this->dsocf = new DivineStarOptionsCustomFunctions;
-
+    	$this->options = new Options;
         add_action( 'wp_ajax_divine_star_update_image_form', array( $this,'update_image_upload') );
+        add_action( 'wp_ajax_divine_star_updateoptions', array( $this,'update_options') );
     }
+
+
+
+
+
+	function update_options() {
+	   
+		if(isset($_POST['going_to'])) {
+			$going_to = $_POST['going_to'];
+		} else {
+			die();
+		}
+		if(!isset($_POST['divinestaroptions'])) {
+			die();
+		}
+
+
+	    $this->dso->load_options($going_to);
+	    
+		$data = $_POST;
+		print_r($data);
+		print_r($this->dso->get_loaded_options());
+
+	    foreach ($data['divinestaroptions'] as $type => $typedata) {
+	    			
+	    	
+	    	foreach ($typedata as $key => $value) {
+	    			$type = (string) $type;
+	    	
+
+	    			
+	    		if($this->options->get_type($type)[0] == 'SimpleType') {
+	    			print_r(array($key,$value));
+	    			try{
+	    		    $this->dso->set_option($key,$value);
+	    			} catch (Excecption $e) {
+	    				echo "$e";
+	    			}
+	    		}
+	    		
+	    		if($type == 'singleimage') {
+	    			$mode = $value['mode'];
+	    			if($mode == "wp") {
+
+	    			$newvalue = $this->options->get_value_structure(
+	    				$type,
+	    			 	[
+	    			 	$value['id'],
+	    			 	$value['orgsrc'],
+	    			 	$value['size'],
+	    			 	$value['src'],
+	    			 	$value['alt'],
+	    			 	$value['title'],
+	    			 	$value['caption'],
+	    			 	$value['description'],
+	    			 	$value['orgwidth'],
+	    			 	$value['orgheight']
+	    			 ],
+	    			 $mode
+	    			);
+	    		    }
+	    		    if($mode == "url") {
+
+	    			$newvalue = $this->options->get_value_structure(
+	    				$type,
+	    			 	[
+	    			 	$value['url'],
+	    			 	$value['alt'],
+	    			 	$value['title'],
+	    			 	$value['caption'],
+	    			 	$value['description'],
+	    			 	$value['width'],
+	    			 	$value['height']
+	    			 ],
+	    			 $mode
+	    			);
+	    		    }
+	    			$this->dso->set_option($key,$newvalue);
+	    	
+	    		}
+	    				
+			
+			
+	    	}
+			
+	
+	    }
+	    
+		$this->dso->save_value_json($going_to,$this->dso->get_loaded_options());
+		
+	}
+
+
+
 
 
 
@@ -35,7 +134,7 @@ private $dsocf;
 	 if(count(explode(" ", $size)) > 1) {
 	 	$size = explode(" ", $size);
 	 }
-
+      
 
 	 $imgdata = $this->wp_get_attachment( $id );
 	 $src = wp_get_attachment_image_src( $id,  $size)[0];
@@ -44,7 +143,9 @@ private $dsocf;
 	 $orgimage_width =  $orgimage[1];
 	 $orgimage_height =  $orgimage[2];
 
-   	 $data = $this->dso->get_json_data_structure('singleimage',
+
+	 
+   	 $data = $this->options->get_value_structure('singleimage',
    			[$id,
    			$orgimage_src,
    			$osize,
@@ -58,10 +159,25 @@ private $dsocf;
    		   ],
    		   "wp"
    		);
-      
+   	
+   
       wp_send_json_success( $data );
 
     
+}
+
+
+	private function wp_get_attachment( $attachment_id ) {
+
+$attachment = get_post( $attachment_id );
+return array(
+    'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
+    'caption' => $attachment->post_excerpt,
+    'description' => $attachment->post_content,
+    'href' => get_permalink( $attachment->ID ),
+    'src' => $attachment->guid,
+    'title' => $attachment->post_title
+);
 }
 
 
@@ -85,23 +201,23 @@ private $dsocf;
 
 
   private function get_option_html($option) {
+  	$type = (string) $option['type'];
+  	if($option['type'] == 'custom_function') { 
+  		return $this->custom_function_option($option);
+  	}
 
 
-  	if($option['type'] == 'text') {
-  	return $this->text_option($option,$this->dso->get_option((string)$option->name));
-  		}
+  	$value = $this->dso->get_option((string)$option->name);
+    return $this->options->get_html($type,$option,$value);
 
-  	if($option['type'] == 'number') {
-  	return $this->number_option($option,$this->dso->get_option((string)$option->name));
-  		}
+   /*
+  		if($this->dso->is_simple_type($type)) {
+    
+    	$value = $this->dso->get_option((string)$option->name);
+    	return $this->options->get_html($type,$option,$value);
 
-  	if($option['type'] == 'checkbox') {
-  	return $this->check_box_option($option,$this->dso->get_option((string)$option->name));
-  		}
+}
 
-  	if($option['type'] == 'selectdropdown') {
-  	return $this->select_dropdown_option($option,$this->dso->get_option((string)$option->name));
-  		}
 
   	if($option['type'] == 'singleimage') {
   		return $this->single_image_option($option,$this->dso->get_option((string)$option->name));
@@ -114,97 +230,12 @@ private $dsocf;
   	if($option['type'] == 'custom_function') { 
   		return $this->custom_function_option($option);
   	}
+*/
 
-  	if($option['type'] == 'generic') { return '';}
     
   }
 
-  private function wp_get_attachment( $attachment_id ) {
-
-$attachment = get_post( $attachment_id );
-return array(
-    'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
-    'caption' => $attachment->post_excerpt,
-    'description' => $attachment->post_content,
-    'href' => get_permalink( $attachment->ID ),
-    'src' => $attachment->guid,
-    'title' => $attachment->post_title
-);
-}
-
-  	private function single_image_option($option,$value) {
-  		
-  		$name = $option->name;
-		$title = $option->title;
-		$size = (string) $option->size;
-		$label = $option->label;
-		$description = $option->description;
-		$osize = $size;
-		if(count(explode(" ", $size)) > 1) {
-		$size = explode(" ", $size);
-		} 
-
-		$value = $value['id'];
-
-		if($value !== "") {
-
-		$post = implode(',',$this->wp_get_attachment($value));
-		$imgdata = $this->wp_get_attachment($value);
-		
-		$src = wp_get_attachment_image_src( $value,  $size)[0];
-      	$orgimage = wp_get_attachment_image_src( $value,  'full');
-      	$orgimage_src =  $orgimage[0];
-      	$orgimage_width =  $orgimage[1];
-      	$orgimage_height =  $orgimage[2];
-
-        } else {
-        	$imgdata = array();
-        	$orgimage_src = $orgimage_width = 
-        	$orgimage_height = $imgdata['alt'] = $imgdata['title'] =
-        	$imgdata['caption'] = $imgdata['description'] = 
-        	$src = $osize =
-        	 "";
-
-
-        }
-
-      	$id = "divinestaroptions[singleimage][$name]";
-		return <<<HTML
-		<tr>
-		<th scope="row">
-		<div class="">$label $value</div>
-		</th>
-		<td>
-	
-		<fieldset id="porto_settings-logo" class="" >
-		
-		<input placeholder="No media selected" type="text" class="upload large-text " name="{$id}[orgsrc]" id="{$id}[orgsrc]" value="{$orgimage_src}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[id]" id="{$id}[id]" value="{$value}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[mode]" id="{$id}[mode]" value="wp">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden" name="{$id}[src]" id="{$id}[src]" value="{$src}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden" name="{$id}[size]" id="{$id}[size]" value="{$osize}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[orgheight]" id="{$id}[orgheight]" value="{$orgimage_height}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[orgwidth]" id="{$id}[orgwidth]" value="{$orgimage_width}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[title]" id="{$id}[title]" value="{$imgdata['title']}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[caption]" id="{$id}[caption]" value="{$imgdata['caption']}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[alt]" id="{$id}[alt]" value="{$imgdata['alt']}">
-		<input data-for='dsoptions-singleimage-{$name}'  type="hidden"  name="{$id}[description]" id="{$id}[description]" value="{$imgdata['description']}">
-		<div class="screenshot">
-		<a class="" href="{$src}" target="_blank">
-		<img class="" id="{$id}-image" src="{$src}" alt="" target="_blank" rel="external">
-		</a>
-		</div>
-		<div class="">
-		<span data-for='{$id}' class="button button-primary ds-options-upload-single-image-button" id="logo-media">Add</span>
-		<span data-for='{$id}' class="button ds-options-remove-single-image-button" id="reset_logo" rel="logo">Remove</span>
-		</div>
-		</fieldset>
-		</td>
-		</tr>
-
-HTML;
-
-  	}
+  
 
 
     private function custom_function_option($option) {
@@ -213,151 +244,6 @@ HTML;
     }
 
 
-  	private function select_dropdown_option($option,$value) {
-		$name = $option->name;
-		$title = $option->title;
-		$label = $option->label;
-		$description = $option->description;
-        
-        $did = '';$ds = '';$dad = '';
-		if($description != '') {
-		$did = $option->name . '-description';
-		$ds = <<<HTML
-		<p class="description" id="{$did}">$description</p>
-HTML;
-		$dad = "aria-describedby='$did'";
-		}
-
-
-		$o_html = '';
-		foreach ($option->so->sog as $sog) {
-			$glabel = $sog['label'];
-			$o_html .= <<<HTML
-			<optgroup label='{$glabel}'>
-HTML;
-
-			foreach($sog->o as $o ) {
-			$ov = $o['value'];
-			$ot = (string) $o;
-
-			if($ov == $value) {
-				$selected = 'selected="selected"';
-			} else {
-				$selected = '';
-			}
-			$o_html .= <<<HTML
-			<option {$selected} value='{$ov}'>$ot</option>
-HTML;
-			}	
-
-			$o_html .= <<<HTML
-			<optgroup>
-HTML;	
-		}
-
-		foreach ($option->so->o as $o) {
-			$ov = $o['value'];
-			$ot = (string) $o;
-
-			if($ov == $value) {
-				$selected = 'selected="selected"';
-			} else {
-				$selected = '';
-			}
-			$o_html .= <<<HTML
-			<option {$selected} value='{$ov}'>$ot</option>
-HTML;
-		}
-
-		return <<<HTML
-<tr>
-<th scope="row"><label for="{$name}-id">$label</label></th>
-<td>
-
-<select id="{$name}-id" name="divinestaroptions[selectdropdown][{$name}]"  value="{$value}" {$dad}>
-$o_html 
-</select>
-$ds
-</td>
-
-</tr>
-HTML;
-
-
-
-
-  	}
-
-	private function number_option($option,$value) {
-		$name = $option->name;
-		$label = $option->label;
-		$description = $option->description;
-		$id = $option->value . '-id';
-		$did = $option->name . '-description';
-		return <<<HTML
-
-		<tr>
-		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="divinestaroptions[number][{$name}]" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
-		<p class="description" id="{$did}">$description</p></td>
-		</tr>
-HTML;
-	}
-
-
-
-
-
-
-
-	private function check_box_option($option,$value) {
-		$name = $option->name;
-		$title = $option->title;
-		$label = $option->label;
-		$description = $option->description;
-        
-        $did = '';$ds = '';$dad = '';
-		if($description != '') {
-		$did = $option->name . '-description';
-		$ds = <<<HTML
-		<p class="description" id="{$did}">$description</p>
-HTML;
-		$dad = "aria-describedby='$did'";
-		}
-        $checked = '';
-		if($value != ''){
-		$checked = 'checked=""';
-		}
-
-		$id = $option->value . '-id';
-		$did = $option->name . '-description';
-		return <<<HTML
-		<tr>
-		<th scope="row">$title</th>
-		<td> <fieldset><legend class="screen-reader-text"><span>$title</span></legend><label for="{$name}-id">
-		<input name="divinestaroptions[checkbox][{$name}]" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
-		</fieldset>
-		$ds
-		</td>
-		</tr>
-HTML;
-	}
-
-	private function text_option($option,$value) {
-		$name = $option->name;
-		$label = $option->label;
-		$description = $option->description;
-		$id = $option->value . '-id';
-		$did = $option->name . '-description';
-		return <<<HTML
-
-		<tr>
-		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="divinestaroptions[text][{$name}]" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
-		<p class="description" id="{$did}">$description</p></td>
-		</tr>
-HTML;
-	}
 	private function option_form_start($name,$title,$style,$going_to) {
 		return <<<HTML
 		<form data-going-to='{$going_to}' class='ds-options-menu-form' data-for='{$name}' id='{$name}-form'method="post" {$style} action="options.php" novalidate="novalidate">
@@ -811,6 +697,13 @@ ul.ds-subsection-menu-ul
 {
    margin-top: -3px;
    background-color: #1a1a1a;
+
+}
+
+
+span.ds-options-form-error {
+
+	color: red;
 
 }
 
