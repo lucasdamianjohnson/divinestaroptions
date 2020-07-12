@@ -14,11 +14,18 @@ private $simple_types;
 
     function __construct() {
     	$this->dsocf = new DivineStarOptionsCustomFunctions;
-    	$this->options = new Options;
+    	$this->options = new Options;	
+    	if(function_exists('add_action')) {
         add_action( 'wp_ajax_divine_star_update_image_form', array( $this,'update_image_upload') );
         add_action( 'wp_ajax_divine_star_updateoptions', array( $this,'update_options') );
+   		}
     }
 
+
+    function get_options() {
+
+    	return $this->options;
+    }
 
 
 

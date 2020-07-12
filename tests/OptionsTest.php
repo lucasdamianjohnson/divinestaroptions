@@ -1,5 +1,4 @@
 <?php declare(strict_types=1);
-require_once('Options.php');
 //./vendor/bin/phpunit tests
 use PHPUnit\Framework\TestCase;
 
@@ -8,39 +7,14 @@ final class OptionsTest extends TestCase
 
 
 
-    public function testOptionTypeInstances() {
-       $this->assertInstanceOf(
-            Options::class,
-            new Options()
-        );
-        $this->assertInstanceOf(
-            SimpleTypes::class,
-            new SimpleTypes()
-        );
-        $this->assertInstanceOf(
-            Content::class,
-            new Content()
-        );
-       $this->assertInstanceOf(
-            Generic::class,
-            new Generic()
-        );
-      $this->assertInstanceOf(
-            Images::class,
-            new Images()
-        );
-
-    }
 
 
-        /**
-        * @depends testOptionTypeInstances
-        */
+    
         public function testOptions()
     {   
 
-
-        $options = new Options();
+        $form = new DivineStarOptionsForm();
+        $options = $form->get_options();
         //$this->assertSame($options->get_option('text'),null);
       // $this->assertInstanceOf($options->get_option('SimpleTypes')::class,new SimpleTypes);
        $this->assertIsObject($options->get_option('SimpleTypes'));
@@ -49,15 +23,14 @@ final class OptionsTest extends TestCase
       //  $this->assertSame("test","test");
     }
 
-    /**
-    * @depends testOptionTypeInstances
-    */
+   
     public function testOptionsValueStructure()
   {
 
       //$long = str_repeat(md5((string)time()), 1);
 
-      $options = new Options();
+      $form = new DivineStarOptionsForm();
+      $options = $form->get_options();
 
       $imgvalue =array( 
         'id' =>  '',
@@ -73,7 +46,7 @@ final class OptionsTest extends TestCase
       );
       $testvalue =  $options->get_value_structure('singleimage',[ '','','','','','','','','',''],"wp");
       $this->assertSame($imgvalue,$testvalue);
-
+       $this->assertSame($imgvalue,'');
 
       $imgvalue =array( 
         'url' => '',
