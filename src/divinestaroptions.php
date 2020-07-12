@@ -14,10 +14,17 @@ class DivineStarOptions
 
 
 	function __construct() {
-		add_action( 'wp_ajax_divine_star_updateoptions', array( $this,'update_options') );
+		//add_action( 'wp_ajax_divine_star_updateoptions', array( $this,'update_options') );
 		$this->simple_type  = array("text","number","checkbox","selectdropdown","generic");
 	}
 
+
+	public function testing($test = null) {
+		if($test === null) {
+			 throw new Exception('The variable is null');
+		}
+		return 'test';
+	}
 
 
 	private function load_options_xml($going_to) {
