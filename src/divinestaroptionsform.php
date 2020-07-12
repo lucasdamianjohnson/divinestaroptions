@@ -384,7 +384,7 @@ HTML;
 		$form_html = '';
 		$i = 0;
 		$section_html = <<<HTML
-		<div id='ds-options-menu-js-id' class="ds-options-menu-wrap ds-menu-open">
+		<div id='ds-options-menu-js-id' class="ds-options-menu-wrap ds-menu-open ds-sidebar-wp-open">
 		<div class='ds-options-menu'>
 		<ul class='ds-options-section-list'>
 		
@@ -531,8 +531,12 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	font-weight: 600;
 }
 
+ div.ds-options-menu-wrap.ds-sidebar-wp-open {
+		left: 160px;
+		width: 40px;
 
-		div.ds-options-menu-wrap {
+	}
+ div.ds-options-menu-wrap.ds-sidebar-wp-collapsed {
 		left: 30px;
 		width: 40px;
 
@@ -635,11 +639,14 @@ button[data-id=ds-options-menu-button] {
 button[data-id=ds-options-close-menu-button] {
 	display: none !important;
 }
-div.ds-options-menu-wrap.ds-menu-open {
+div.ds-options-menu-wrap.ds-menu-open.ds-sidebar-wp-open {
 		left: 160px;
 
 	}
+div.ds-options-menu-wrap.ds-menu-open.ds-sidebar-wp-collapsed {
+		left: 35px;
 
+	}
 
 
 	div.ds-form-container {

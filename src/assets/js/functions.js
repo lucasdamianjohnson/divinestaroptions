@@ -100,6 +100,21 @@ function addClass(element,add_class) {
 
 }
 
+
+
+function addRemoveClass(element,add_class,remove_class) {
+ classes = element.className.split(" ");
+  if (classes.indexOf(add_class) == -1) {
+    element.className += " " + add_class;
+  }
+
+  var re = new RegExp(remove_class,"g");
+  element.className = element.className.replace(re, "");
+ 
+
+}
+
+
 function toggleClass(element,toggle_class) { 
 
 if (element.classList) {
