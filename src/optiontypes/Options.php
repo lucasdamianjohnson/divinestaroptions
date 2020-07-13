@@ -11,21 +11,20 @@
 * @version    Alpha: .2  
 * @since      Class available since Alpha .2
 */
-final class Options
+final class Options extends Option
 {
 
 
 private $option_types;
 	   public function __construct() {
-	   	$this->option_types = 
-	   	array('SimpleTypes' => new SimpleTypes,
-		'Content' => new Content,
+	   	$this->option_types =array(
+      'SimpleTypes' => new SimpleTypes,
+      'TextStyles' => new TextStyles,
+		  'Content' => new Content,
 	   	'Images' => new Images,
 	    'Generic' => new Generic);
+
 	   }
-
-
-
 
 
 	public function add_option_type($option_class_name) {
@@ -48,9 +47,21 @@ private $option_types;
       return array();
 }
 
+       
+    public function get_data_strcutre($type,$args,$mode = null) : array {
+
+       foreach ($this->option_types as $key => $optype) {
+          if($optype->is_type($type)) {
+      return $optype->get_data_strcutre($type,$args,$mode);
+      }
+         }
 
 
-	public function get_type($type) : array {
+
+      return array(false);
+    }
+
+	public  function is_type($type) : bool {
 
 		foreach ($this->option_types as $key => $optype) {
     	 	  if($optype->is_type($type)) {
@@ -61,23 +72,11 @@ private $option_types;
 
       return array("Unknown",$type);
 	}
-	   
-    public function get_data_strcutre($type,$args,$mode = null) : array {
-
-    	 foreach ($this->option_types as $key => $optype) {
-    	 	  if($optype->is_type($type)) {
-    	return $optype->get_data_strcutre($type,$args,$mode);
-      }
-         }
 
 
 
-      return array(false);
-    }
 
-
-
-	  public function get_html($type,$option,$value) : string {
+	  public function get_html($type,$option,$value) : string{
   	  $type = (string) $option['type'];
 
 

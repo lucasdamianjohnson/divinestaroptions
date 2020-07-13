@@ -472,6 +472,7 @@ ul.ds-subsection-menu-ul
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul
 {
+
     visibility: hidden;
   transition-delay: 0s; /* react immediately on hover */
   position: absolute;
@@ -480,7 +481,7 @@ ul.ds-subsection-menu-ul
   width: auto;
   margin-top: 0px;
   margin-left: 40px;
-  min-width: 200px;
+  min-width: 160px;
   top: auto;
   z-index: 9999;
 
@@ -489,6 +490,8 @@ ul.ds-subsection-menu-ul
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul:hover
 {
+	  transition: 0.2s 1s; 
+   transition: 0.2s 1s; 
   visibility: visible;
   transition-delay: 0s; /* react immediately on hover */
   display: block !important;
@@ -532,6 +535,7 @@ div.ds-section-menu-option-text
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
    ul.ds-subsection-menu-ul:first-of-type
 {
+   transition: 0.2s 1s; 
   visibility: visible;
   transition-delay: 0s; /* react immediately on hover */
   display: block !important;
@@ -653,7 +657,7 @@ margin: 0;
 div.ds-options-menu-wrap {
 	margin: 0;
 	padding: 0px;
-	z-index: 9999;
+	z-index: 5000;
 }
 div.ds-options-menu-wrap div.ds-options-menu {
 	vertical-align: top;
@@ -684,6 +688,8 @@ button.ds-section-menu-option-button {
 	height: 30px;
 	padding: 0px;
 	margin: 0;
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-options-menu-button-container
@@ -693,20 +699,19 @@ background-color: inherit;
     border: 0;
 	width: 100%;
 	height: 30px;
-	padding: 0px;
+	margin: 0;
 }
-
-
-
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button:hover {
     background-color: #6e2aa2;
     color: #1a1a1a;
 }
+
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-icon:hover {
 
 }
+
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button div.ds-section-menu-option-icon {
 	position: absolute;
@@ -714,17 +719,18 @@ button.ds-section-menu-option-button div.ds-section-menu-option-icon {
 	margin-left: 5px;
 }
 
-
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-option-section-expanded.ds-section-menu-option-button {
 	border-bottom: 2px solid #1a1a1a;
 
 }
+
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button.active {
 	background-color: #8031bc;
 	color: white;
 }
+
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button.active div.ds-section-menu-option-icon {
 	color: white;
@@ -737,6 +743,7 @@ ul.ds-subsection-menu-ul li.ds-subection-menu-option-li
    font-weight: 300;
 
 }
+
 div.ds-options-menu-wrap div.ds-options-menu
 ul.ds-subsection-menu-ul
 {
@@ -744,7 +751,6 @@ ul.ds-subsection-menu-ul
    background-color: #1a1a1a;
 
 }
-
 
 span.ds-options-form-error {
 

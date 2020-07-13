@@ -13,6 +13,7 @@
 require_once('Option.php');
 require_once('Content.php');
 require_once('SimpleTypes.php');
+require_once('TextStyles.php');
 require_once('Images.php');
 require_once('Generic.php');
 require_once('Options.php');
