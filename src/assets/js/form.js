@@ -63,6 +63,9 @@ function updateFontDisplay(value,form) {
   document.getElementById(form+'-font-display').style.fontFamily = value;
 
 }
+function defaultCallBack(value,form) {
+  return true;
+}
 
 docReady(function() {
 

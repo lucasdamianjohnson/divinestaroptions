@@ -413,6 +413,7 @@ HTML;
 }
 
 private function get_css() {
+$url = OPTIONS_URL;
 	return <<<HTML
 <style type="text/css">
 
@@ -482,6 +483,7 @@ ul.ds-subsection-menu-ul
   min-width: 160px;
   top: auto;
   z-index: 9999;
+
 
 }
 
@@ -622,8 +624,13 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 }
 
 
+.ds-form-label {
 
-
+	margin-right: 10px;
+}
+.flex-center {
+	align-items: center;
+}
 .flex-row {
 	display: inline-flex;
 	flex-wrap: nowrap;
@@ -755,6 +762,144 @@ span.ds-options-form-error {
 	color: red;
 
 }
+
+
+/*********************************************/
+/*Drop Down Search CSS*/
+.ds-options-dropdownsearch-currentselected {
+  color: black;
+  width: 150px;
+  font-size: 14px;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+.ds-options-dropdownsearch-currentselected span{
+	padding: 15px;
+
+}
+.ds-options-dropdownsearch-clearselect {
+  width: 15px;
+  height: 22px;
+}
+.ds-options-dropdownsearch-clearselect:hover {
+ cursor: pointer;
+}
+.ds-options-dropdownsearch-clearselect span.ds-close-image {
+    padding: 2px 15px 14px 2px;
+
+    box-sizing: border-box;
+    background-image: url({$url}assets/images/formicons/close_mini.svg);
+   background-position: 0px 6px;
+    background-repeat: no-repeat;
+    background-size: 10px 10px;
+}
+
+
+.ds-options-dropdownsearch-dropdownbutton {
+    padding: 4px;
+	border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+	height: 17px;
+	width: 19px;
+	
+	background-image: linear-gradient( #0071a1, #ccefff);
+}
+.ds-options-dropdownsearch-dropdownbutton span.ds-arrowdown-image.ds-image-rotate {
+	background-image: url({$url}assets/images/formicons/arrow_up.svg);
+	transform: rotate(180deg);
+	border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.ds-options-dropdownsearch-dropdownbutton:hover {
+	background-color:  #016087;
+	cursor: pointer;
+}
+.ds-options-dropdownsearch-dropdownbutton span.ds-arrowdown-image {
+	padding: 2px 15px 14px 0px;
+    margin-top: 5px;
+    box-sizing: border-box;
+	background-image: url({$url}assets/images/formicons/arrow_down.svg);
+	background-position: 0px 4px;
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+
+}
+.ds-options-dropdownsearch-searchinput {
+  box-sizing: border-box;
+  background-image: url('{$url}assets/images/formicons/search.svg');
+  background-position: 170px 5px;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  font-size: 14px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  width: 198px;
+  border-bottom: 1px solid #ddd;
+}
+
+/*
+.ds-options-dropdownsearch-searchinput:focus 
+{outline: 3px solid #ddd;}
+*/
+.dropdown {
+  width: 200px;
+  height: 25px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  position: relative;
+  display: inline-block;
+}
+.dropdown:hover, .dropdown:focus {
+  background-color: #e6e6e6;
+
+}
+.dropdown-content {
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  width: 200px;
+  overflow: auto;
+  z-index: 900;
+  margin-top: 104px;
+
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 5px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content.show {
+	display: block;
+}
+.search-list-container {
+	
+	height: 150px;
+  
+	overflow-y: scroll;
+}
+.ds-dropdown-items div {
+	display: inline-block;
+}
+
+.ds-options-font-display {
+	border: 1px solid grey;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 5px;
+	width: 350px;
+	height: 80px;
+}
+/*********************************************/
 
 
 </style>

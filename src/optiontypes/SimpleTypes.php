@@ -48,7 +48,11 @@ public function get_value_structure($type,$args,$mode = null) : array {
 
 
     public function get_html($type,$option,$value) : string {
-
+    	if(isset($option['mode'])) {
+  			$mode = $option['mode'];
+  		} else {
+  			$mode = '';
+  		}
 
 
   
@@ -70,7 +74,8 @@ public function get_value_structure($type,$args,$mode = null) : array {
   		}
 
   	if($type == 'selectdropdown') {
-  	return $this->select_dropdown_option($option,$value);
+
+  	return $this->select_dropdown_option($option,$value,$mode);
   		}
 
   	if($type == 'generic') { return '';}
@@ -82,13 +87,92 @@ public function get_value_structure($type,$args,$mode = null) : array {
 
 
 
+    private function search_dropdown($option,$value) {
+    	$label = $option->label;
+		$name = (string) $option->name;
+		$description = $option->description;
+		$id = $option->value . '-id';
+		$did = $option->name . '-description';
 
-  	private function select_dropdown_option($option,$value) {
+
+		$form_name = "divinestaroptions[selectdropdown][$name]";
+		$form_data = '';
+		foreach($option->so->o as $key => $ovalue) {
+
+		  $form_data .= <<<HTML
+<a tabindex="0" onclick='clieckedDropDownSearchOption("{$ovalue}","{$form_name}",defaultCallBack)' class='ds-dropdown-search-item' >$ovalue</a>
+HTML;
+
+		}
+
+
+
+
+	$html = <<<HTML
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+
+
+
+
+</script>
+<div class='flex-row'>
+
+<div class="flex-col flex-center">
+<p class='ds-form-label'>Font Fanily</p>
+</div>
+
+<div class="flex-col flex-center">
+
+<input type="hidden" value="" id="{$form_name}" name="{$form_name}"/>
+<div tabindex="0" class="dropdown">
+<div class='ds-dropdown-items dropbtn'>
+
+	<div tabindex="0" class="ds-options-dropdownsearch-currentselected" onclick="dropDownSearchClick(event,'{$form_name}')">
+	<span id='{$form_name}-dropdownsearch-currentselected'>$value</span>
+	</div>
+
+	<div tabindex="0" id='{$form_name}-dropdownsearch-clearcurrentselected' class='ds-options-dropdownsearch-clearselect'>
+	<span  onclick='dropDownSearchClearSelect(event,"{$form_name}")' class="ds-close-image"></span>
+	</div>
+
+	<div tabindex="0" id='{$form_name}-dropdownsearch-dropdownbutton' class='ds-options-dropdownsearch-dropdownbutton'>
+	<span  onclick='dropDownSearchClick(event,"{$form_name}")' class="ds-arrowdown-image"></span>
+	</div>
+
+</div>
+</div>
+  <div id="{$form_name}-dropdownsearch-dropdown" class="dropdown-content">
+    <input class='ds-options-dropdownsearch-searchinput' type="text" placeholder="Search.." id="{$form_name}-dropdownsearch-searchinput" onkeyup="filterFunction('{$form_name}')">
+    <div class='search-list-container'>
+    $form_data
+    </div>
+  </div>
+<div>
+</div>
+
+</div>
+
+</div>
+
+
+HTML;
+
+		return $this->get_form_wrap($html,$label,true,$id);
+    }
+  	private function select_dropdown_option($option,$value,$mode) {
 		$name = $option->name;
 		$title = $option->title;
 		$label = $option->label;
 		$description = $option->description;
         
+		if($mode == "searchable") {
+			return $this->search_dropdown($option,$value);
+		}
+
+
         $did = '';$ds = '';$dad = '';
 		if($description != '') {
 		$did = $option->name . '-description';
