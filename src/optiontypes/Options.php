@@ -61,16 +61,20 @@ private $option_types;
       return array(false);
     }
 
-	public  function is_type($type) : bool {
+ 
 
+	public  function is_type($type) : bool {
+    /*
 		foreach ($this->option_types as $key => $optype) {
     	 	  if($optype->is_type($type)) {
    			  	return array($key,$type);
       			}
-         }
+         }*/
+      $arg_list = func_get_args();
+      $looking_for = $arg_list[1];
+      return (bool) $this->option_types[$looking_for]->is_type($type);
 
-
-      return array("Unknown",$type);
+      //return array("Unknown",$type);
 	}
 
 

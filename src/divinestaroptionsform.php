@@ -70,7 +70,7 @@ private $options;
 	    	
 
 	    			
-	    		if($this->options->get_type($type)[0] == 'SimpleType') {
+	    		if($this->options->is_type($type,'SimpleTypes')) {
 	    			print_r(array($key,$value));
 	    			try{
 	    		    $this->dso->set_option($key,$value);

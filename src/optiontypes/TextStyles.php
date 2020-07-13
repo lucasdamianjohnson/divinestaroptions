@@ -70,69 +70,137 @@ class TextStyles extends Option
 
 	private function font_family_dropdown_search($option,$value) {
 		$label = $option->label;
+		$name = (string) $option->name;
 		$description = $option->description;
 		$id = $option->value . '-id';
 		$did = $option->name . '-description';
 
 		$fonts = $this->get_fonts();
-
+		$form_name = "divinestaroptions[font][$name]";
 		$font_data = '';
 		foreach($fonts as $font_family => $ff) {
 		  foreach ($ff as $key => $font) {
-		  $font_data .= "<a data-value='$font'>$font</a>";
+		  $font_data .= <<<HTML
+<a tabindex="0" onclick='clieckedDropDownSearchOption("{$font}","{$form_name}",updateFontDisplay)' class='ds-dropdown-search-item' data-value='$font'>$font</a>
+HTML;
 		  }
 		}
 
-
+$url = OPTIONS_URL;
 
 
 	$html = <<<HTML
 <style type="text/css">
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
-  width: 200px;
-  border: none;
+.ds-options-dropdownsearch-currentselected {
+  color: black;
+  width: 150px;
+  font-size: 14px;
+  border-radius: 5px;
+
   cursor: pointer;
 }
+.ds-options-dropdownsearch-currentselected span{
+	padding: 15px;
 
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #3e8e41;
 }
 
-#myInput {
+
+
+.ds-options-dropdownsearch-clearselect {
+  width: 15px;
+  height: 22px;
+}
+.ds-options-dropdownsearch-clearselect:hover {
+ cursor: pointer;
+}
+.ds-options-dropdownsearch-clearselect span.ds-close-image {
+    padding: 2px 15px 14px 2px;
+
+    box-sizing: border-box;
+    background-image: url({$url}assets/images/formicons/close_mini.svg);
+   background-position: 0px 6px;
+    background-repeat: no-repeat;
+    background-size: 10px 10px;
+}
+
+
+.ds-options-dropdownsearch-dropdownbutton {
+    padding: 4px;
+	border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+	height: 17px;
+	width: 19px;
+	
+	background-image: linear-gradient( #0071a1, #ccefff);
+}
+.ds-options-dropdownsearch-dropdownbutton span.ds-arrowdown-image.ds-image-rotate {
+	background-image: url({$url}assets/images/formicons/arrow_up.svg);
+	transform: rotate(180deg);
+	border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.ds-options-dropdownsearch-dropdownbutton:hover {
+	background-color:  #016087;
+	cursor: pointer;
+}
+.ds-options-dropdownsearch-dropdownbutton span.ds-arrowdown-image {
+	padding: 2px 15px 14px 0px;
+    margin-top: 5px;
+    box-sizing: border-box;
+	background-image: url({$url}assets/images/formicons/arrow_down.svg);
+	background-position: 0px 4px;
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+
+}
+.ds-options-dropdownsearch-searchinput {
   box-sizing: border-box;
-  background-image: url('searchicon.png');
-  background-position: 14px 12px;
+  background-image: url('{$url}assets/images/formicons/search.svg');
+  background-position: 170px 5px;
   background-repeat: no-repeat;
-  font-size: 16px;
+  background-size: 20px 20px;
+  font-size: 14px;
   padding: 14px 20px 12px 45px;
   border: none;
+  width: 198px;
   border-bottom: 1px solid #ddd;
 }
 
-#myInput:focus {outline: 3px solid #ddd;}
-
+/*
+.ds-options-dropdownsearch-searchinput:focus 
+{outline: 3px solid #ddd;}
+*/
 .dropdown {
+  width: 200px;
+  height: 25px;
+  border-radius: 5px;
+  border: 1px solid grey;
   position: relative;
   display: inline-block;
 }
+.dropdown:hover, .dropdown:focus {
+  background-color: #e6e6e6;
 
+}
 .dropdown-content {
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   display: none;
   position: absolute;
   background-color: #f6f6f6;
-  min-width: 230px;
+  width: 200px;
   overflow: auto;
-  border: 1px solid #ddd;
   z-index: 1;
 }
 
 .dropdown-content a {
   color: black;
-  padding: 12px 16px;
+  padding: 5px 16px;
   text-decoration: none;
   display: block;
 }
@@ -143,40 +211,55 @@ class TextStyles extends Option
 	height: 200px;
 	overflow-y: scroll;
 }
-</style>
-<script type="text/javascript">
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction(event) {
-  event.preventDefault();
-  console.log("hello");
-  document.getElementById("myDropdown").classList.toggle("show");
+.ds-dropdown-items div {
+	display: inline-block;
 }
 
-function filterFunction() {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
-  a = div.getElementsByTagName("a");
-  for (i = 0; i < a.length; i++) {
-    txtValue = a[i].textContent || a[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      a[i].style.display = "";
-    } else {
-      a[i].style.display = "none";
-    }
-  }
+.ds-options-font-display {
+	border: 1px solid grey;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 5px;
+	width: 350px;
+	height: 80px;
 }
+
+</style>
+<script type="text/javascript">
+
+
+
+
 </script>
-<div class="dropdown">
-  <button onclick="myFunction(event)" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+<input type="hidden" value="" id="{$form_name}" name="{$form_name}"/>
+<div tabindex="0" class="dropdown">
+<div class='ds-dropdown-items dropbtn'>
+
+	<div tabindex="0" class="ds-options-dropdownsearch-currentselected" onclick="dropDownSearchClick(event,'{$form_name}')">
+	<span id='{$form_name}-dropdownsearch-currentselected'>Arial</span>
+	</div>
+
+	<div tabindex="0" id='{$form_name}-dropdownsearch-clearcurrentselected' class='ds-options-dropdownsearch-clearselect'>
+	<span  onclick='dropDownSearchClearSelect(event,"{$form_name}")' class="ds-close-image"></span>
+	</div>
+
+	<div tabindex="0" id='{$form_name}-dropdownsearch-dropdownbutton' class='ds-options-dropdownsearch-dropdownbutton'>
+	<span  onclick='dropDownSearchClick(event,"{$form_name}")' class="ds-arrowdown-image"></span>
+	</div>
+
+</div>
+</div>
+  <div id="{$form_name}-dropdownsearch-dropdown" class="dropdown-content">
+    <input class='ds-options-dropdownsearch-searchinput' type="text" placeholder="Search.." id="{$form_name}-dropdownsearch-searchinput" onkeyup="filterFunction('{$form_name}')">
     <div class='search-list-container'>
     $font_data 
     </div>
   </div>
+<div>
+</div>
+<br>
+<div class='ds-options-font-display'>
+<p style='font-family:"Arial" ' id='{$form_name}-font-display'>1 2 3 4 5 6 7 8 9 0 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z</p>
 </div>
 HTML;
 

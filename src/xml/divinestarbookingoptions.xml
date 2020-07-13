@@ -12,7 +12,12 @@ Divine Star Options
 		</option>
 		<option type="font" mode="font-family">
 		  	<label>First font</label>
-		  	<name>Font 1</name>
+		  	<name>font1</name>
+		  	<value>Arial</value>
+		</option>
+		<option type="font" mode="font-family">
+		  	<label>Second font</label>
+		  	<name>font2</name>
 		  	<value>Arial</value>
 		</option>
 		<option type="selectdropdown">

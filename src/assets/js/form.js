@@ -5,10 +5,71 @@
 * @version    Alpha: .2  
 * @since      Class available since Alpha 0
 */
+function dropDownSearchClick(event,form) {
+  event.preventDefault();
+  var button = document.getElementById(form+"-dropdownsearch-dropdownbutton")
+  button.getElementsByTagName("span")[0].classList.toggle("ds-image-rotate");;
+  document.getElementById(form+"-dropdownsearch-dropdown").classList.toggle("show");
+}
 
+function filterFunction(form) {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById(form+"-dropdownsearch-searchinput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById(form+"-dropdownsearch-dropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+
+function clieckedDropDownSearchOption(value,form,callback) {
+  var orgvalue = value;
+  if(value.length >= 16 ) {
+    var split = value.split(" ");
+    value = split[0] + " " + split[1] + ".....";
+    if(value.length >= 16 ) {
+      value = value.substring(0, 16);
+    }
+  }
+  document.getElementById(form+'-dropdownsearch-currentselected').innerText = value;
+  document.getElementById(form+'-dropdownsearch-searchinput').value = '';
+  document.getElementById(form).value = orgvalue;
+  div = document.getElementById(form+"-dropdownsearch-dropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    a[i].style.display = "block";
+  }
+
+  callback(value,form);
+} 
+
+function dropDownSearchClearSelect(event,form) {
+  event.preventDefault();
+  document.getElementById(form+'-dropdownsearch-currentselected').innerText = '';
+  document.getElementById(form+'-dropdownsearch-searchinput').value = '';
+  document.getElementById(form).value = '';
+  return;
   
+}
+
+function updateFontDisplay(value,form) {
+  console.log(document.getElementById(form+'-font-display'));
+  document.getElementById(form+'-font-display').style.fontFamily = value;
+
+}
 
 docReady(function() {
+
+
+
+
+
 
 //collapse-button
   var wp_collapse_button  = document.getElementById('collapse-button');
