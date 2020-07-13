@@ -380,16 +380,19 @@ HTML;
         $js = $this->get_javascript();
 		echo <<<HTML
 		<div class='flex-row'>
+
 		<div class='flex-col'>
 		$section_html
+	
 		</div>
-		</div>
-		</div>
-		<div class='flex-row'>
+
+	
 		<div class='flex-col'>
 		<div class='ds-form-container'>
 		$form_html
 		</div>
+		</div>
+
 		</div>
 		</div>
 		$css $js
@@ -441,7 +444,7 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
  div.ds-options-menu-wrap.ds-sidebar-wp-open {
 		left: 160px;
 		width: 40px;
-
+	
 	}
  div.ds-options-menu-wrap.ds-sidebar-wp-collapsed {
 		left: 30px;
@@ -452,10 +455,11 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li 
 button.ds-section-menu-option-button.ds-section-menu-option-top-level div.ds-section-menu-option-text {
 	visibility: hidden;
+
 }
 
 div.ds-options-menu-wrap div.ds-options-menu ul.ds-options-section-list {
-	z-index: 999;
+
 }
 
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
@@ -475,7 +479,7 @@ ul.ds-subsection-menu-ul:hover
   display: block;
   width: 100%;
   margin-left: 40px;
-  min-width: 175px;
+  min-width: 50px;
   top: auto;
   z-index: 999;
 
@@ -496,11 +500,13 @@ width: 200px;
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover button.ds-section-menu-option-top-level
 div.ds-section-menu-option-text
 {
-color: white;
-width: 200px;
-  visibility: visible !important;
- display: block !important;
+	color: white;
+	width: 200px;
+	visibility: visible !important;
+	display: block !important;
 }
+
+
 
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
    ul.ds-subsection-menu-ul:first-of-type
@@ -509,11 +515,11 @@ div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-sectio
   transition-delay: 0s; /* react immediately on hover */
   position: absolute;
   left: auto;
-  width: 100%;
+
   margin-left: 40px;
   min-width: 175px;
   top: auto;
-  z-index: 999;
+    z-index: 999;
   display: block !important;
 }
 
@@ -557,7 +563,7 @@ div.ds-options-menu-wrap.ds-menu-open.ds-sidebar-wp-collapsed {
 
 
 	div.ds-form-container {
-		margin-left: 200px;
+		margin-left: 5px;
 	}
 div.ds-options-menu-wrap.ds-menu-open div.ds-options-menu 
 ul.ds-subsection-menu-ul
@@ -606,6 +612,10 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	flex-wrap: nowrap;
 }
 
+.flex-col {
+	display: inline-flex;
+	flex-wrap: nowrap;
+}
 .ds-options-menu-form {
 	/*margin-top: -35px;*/
 }
@@ -628,15 +638,14 @@ margin: 0;
 div.ds-options-menu-wrap {
 	margin: 0;
 	padding: 0px;
-	position: fixed;
 
 }
 div.ds-options-menu-wrap div.ds-options-menu {
 	vertical-align: top;
 	padding: 0px;
 	margin: 0;
-
-	height: 100vh;
+	min-height: 1000px;
+	height: 100%;
 	border-top: 2px solid black;
 	background-color: #2d2e39;
 }
