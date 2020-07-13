@@ -38,6 +38,10 @@ class DivineStarOptions
 		return	simplexml_load_file(OPTIONS_PATH.'xml/'.$going_to.'.xml');
 	}
 
+	public function load_options_xml_string($xml) {
+		return simplexml_load_string($xml);
+    }
+
 
 	private function load_value_json($json) {
 
@@ -61,6 +65,16 @@ class DivineStarOptions
 		return $this->loaded_options;
 	}
 
+
+
+	/**
+	* Get the option value of the currently loaded options.
+	*
+	* @param string $name The name of the value you would like to get.
+	*
+	* @return array The value of the option FALSE If the option is not found. 
+	* @access public
+	*/
 	public function get_option($name) {
 		//return $this->loaded_options;
 		if(isset($this->loaded_options[$name]['value']) && $this->loaded_options[$name]['value'] !== null){

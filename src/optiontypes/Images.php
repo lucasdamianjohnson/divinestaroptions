@@ -120,7 +120,8 @@ return array(
 
 		$value = $value['id'];
 
-		if($value !== "") {
+		if($value !== "" && function_exists('wp_get_attachment_image_src')) {
+
 
 		$post = implode(',',$this->wp_get_attachment($value));
 		$imgdata = $this->wp_get_attachment($value);

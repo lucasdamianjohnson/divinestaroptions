@@ -212,15 +212,18 @@ HTML;
 		$name = $option->name;
 		$label = $option->label;
 		$description = $option->description;
-		$id = $option->value . '-id';
+		$id = $option->name . '-id';
 		$did = $option->name . '-description';
 		return <<<HTML
-
-		<tr>
-		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="divinestaroptions[text][{$name}]" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
-		<p class="description" id="{$did}">$description</p></td>
-		</tr>
+<tr>
+<th scope="row">
+<label for="{$id}">$label</label>
+</th>
+<td>
+<input name="divinestaroptions[text][{$name}]" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+<p class="description" id="{$did}">$description</p>
+</td>
+</tr>
 HTML;
 	}
 
