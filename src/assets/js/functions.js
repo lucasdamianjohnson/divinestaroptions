@@ -1,6 +1,17 @@
+/**
+* Some code is copied and linked to its resportiroes. 
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha 0
+*/
 
 
-//https://github.com/jfriend00/docReady
+/**
+* DocReady function. Loads when the HTML dom is ready. 
+* Found here: https://github.com/jfriend00/docReady
+* Thank you!
+*/
 (function(funcName, baseObj) {
     "use strict";
     // The public function name defaults to window.docReady

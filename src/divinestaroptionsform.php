@@ -1,17 +1,25 @@
 <?php 
-
-
-include('optiontypes/Options.php');
+include('optiontypes/optionsetup.php');
 include('divinestaroptionscustomsfunctions.php');
-
-
+/**
+* Create the options form. 
+*
+* This creates the options form and handles the updating of options. 
+* 
+* @category   Main
+* @package    DivineStarOptions
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha 0
+*/
 class DivineStarOptionsForm
 {
 	
 private $dso;
 private $dsocf;
 private $simple_types;
-
+private $options;
     function __construct() {
     	$this->dsocf = new DivineStarOptionsCustomFunctions;
     	$this->options = new Options;	
@@ -25,6 +33,12 @@ private $simple_types;
     function get_options() {
 
     	return $this->options;
+    }
+
+    function add_option_type($option_class_name) {
+
+
+    	$this->options->add_option_type("CustomOptionType");
     }
 
 

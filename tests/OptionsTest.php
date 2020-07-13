@@ -10,7 +10,7 @@ final class OptionsTest extends TestCase
 
 
     
-        public function testOptions()
+        public function testOptions() : void
     {   
 
         $form = new DivineStarOptionsForm();
@@ -34,7 +34,7 @@ final class OptionsTest extends TestCase
      * @depends testOptions
      */
    
-    public function testOptionsValueStructure()
+    public function testOptionsValueStructure() : void
   {
 
       //$long = str_repeat(md5((string)time()), 1);
@@ -74,7 +74,7 @@ final class OptionsTest extends TestCase
 
 
 
-  public function testOptionsHTMLOutput() 
+  public function testOptionsHTMLOutput() : void
   {
     $dso = new DivineStarOptions;
     $form = new DivineStarOptionsForm();
@@ -123,15 +123,5 @@ HTML;
 
 
   }
-
-
-
-
-
-
-
-
-
-
 
 }

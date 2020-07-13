@@ -1,3 +1,10 @@
+/**
+* This is the main JS file for the Divine Star Options Form. 
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha 0
+*/
 
   
 
@@ -135,10 +142,6 @@ function open_wpmedia(multiple,for_img) {
                        });
 
                        image_frame.on('close',function() {
-
-                        
-                          // On close, get selections and save to the hidden input
-                          // plus other AJAX stuff to refresh the image preview
                           var selection =  image_frame.state().get('selection');
                           console.log(selection);
                           var gallery_ids = new Array();
@@ -160,8 +163,7 @@ function open_wpmedia(multiple,for_img) {
 
                       image_frame.on('open',function() {
                         
-                        // On open, get the id from the hidden input
-                        // and select the appropiate images in the media manager
+        
                         var selection =  image_frame.state().get('selection');
                         console.log(for_img+"[id]");
                         var ids = document.getElementById(for_img+"[id]").value;

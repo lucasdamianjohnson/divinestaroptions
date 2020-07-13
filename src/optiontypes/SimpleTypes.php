@@ -1,5 +1,17 @@
 <?php
-
+/**
+* Simple option types.
+*
+* Handles option types that just store a string value. 
+* This currenlty includes the HTML input types of
+* text, number, checkbox, and select.
+* @category   Options
+* @package    DivineStarOptions
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha .2
+*/
 class SimpleTypes extends Option
 {
 
@@ -114,7 +126,7 @@ HTML;
 		}
 
 		foreach ($option->so->o as $o) {
-			$ov = $o['value'];
+			$ov =  $o['value'];
 			$ot = (string) $o;
 
 			if($ov == $value) {

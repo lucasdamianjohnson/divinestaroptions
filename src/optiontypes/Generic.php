@@ -1,7 +1,16 @@
 <?php 
-
-
-
+/**
+* Handle generic option types.
+*
+* This handles the generic option types. 
+* 
+* @category   Options
+* @package    DivineStarOptions
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha .2
+*/
 class Generic extends Option 
 {
 

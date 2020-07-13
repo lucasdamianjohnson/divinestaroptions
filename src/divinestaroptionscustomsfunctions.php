@@ -1,9 +1,16 @@
 <?php 
-
-
-
-
-
+/**
+* Add custom functions to the form.
+*
+* Allows you to add custom functions to the form. 
+* 
+* @category   Main
+* @package    DivineStarOptions
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha 0
+*/
 class DivineStarOptionsCustomFunctions
 {
 	

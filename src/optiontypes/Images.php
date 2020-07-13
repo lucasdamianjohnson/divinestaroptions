@@ -1,6 +1,16 @@
 <?php
-
-
+/**
+* Hand image option types.
+*
+* This is handles all the types and modes for image options.
+* 
+* @category   Options
+* @package    DivineStarOptions
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha .2
+*/
 class Images extends Option  
 {
 

@@ -1,9 +1,20 @@
 <?php
-ini_set('display_errors', 1);
+/*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-
+*/
+/**
+* Get and set options.
+*
+* Handles the getting and setting of option values stored in JSON
+* 
+* @category   Main
+* @package    DivineStarOptions
+* @copyright  Copyright (c) 2020 Divine Star LLC (http://www.divinestarsoftware.org)
+* @license    License: GPLv3 or later
+* @version    Alpha: .2  
+* @since      Class available since Alpha 0
+*/
 class DivineStarOptions
 {
 
