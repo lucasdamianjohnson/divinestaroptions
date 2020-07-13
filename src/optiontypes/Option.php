@@ -61,4 +61,46 @@ abstract class Option
 	*/
 	abstract public function is_type($type) : bool;
 
+	/**
+	* Output an error to the Options Form.
+	*
+	* @param string $message The error message to display.
+	* @return string The error message HTML. 
+	* @access protected
+	*/
+	protected function return_form_error($message) : string 
+	{
+		$error = <<<HTML
+	<span class='ds-options-form-error'>$message</span>
+HTML;
+	    return $this->get_form_wrap($error);
+	}
+
+	/**
+	* Wrap HTML content for Options form. 
+	*
+	* @param string $content The HTML content.
+	* @return string The wraped HTML content.
+	* @access protected
+	*/
+	protected function get_form_wrap($content,$title = '',$label=false,$id='') : string 
+	{
+		if($label) {
+			$label = <<<HTML
+			<label for="{$id}">$title</label>
+HTML;
+		} else {
+			$label = $title;
+		}
+		if($title != '') {
+			$title = <<<HTML
+			<th scope="row">$label</th>
+HTML;
+		}
+		return <<<HTML
+		<tr>$title<td>$content</td></tr>
+HTML;
+	}
+
+
 }

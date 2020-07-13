@@ -10,6 +10,11 @@ Divine Star Options
 			<value>#1a1a1a</value>
 			<description> This is the first test option. </description>
 		</option>
+		<option type="font" mode="font-family">
+		  	<label>First font</label>
+		  	<name>Font 1</name>
+		  	<value>Arial</value>
+		</option>
 		<option type="selectdropdown">
 			<label>Drop Down With Out Option Group</label>
 			<name>selectdropdownoption</name>

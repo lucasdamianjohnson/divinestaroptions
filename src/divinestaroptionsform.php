@@ -324,11 +324,9 @@ HTML;
 			$form_html .= $this->option_form_start($name,$title,$style,$going_to);		 
 			$i++;
 			foreach($section->option as $key => $option){
-		
-		
+					
 					 $form_html .= $this->get_option_html($option); 
 				
-
 			}
 
 			$form_html .= $this->option_form_end($name);	
