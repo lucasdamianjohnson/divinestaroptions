@@ -470,19 +470,40 @@ ul.ds-subsection-menu-ul
   display: none !important;
 }
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
-ul.ds-subsection-menu-ul:hover
+ul.ds-subsection-menu-ul
 {
-    visibility: visible;
+    visibility: hidden;
   transition-delay: 0s; /* react immediately on hover */
   position: absolute;
   left: auto;
-  display: block;
-  width: 100%;
+  display: none;
+  width: auto;
+  margin-top: 0px;
   margin-left: 40px;
-  min-width: 50px;
+  min-width: 200px;
   top: auto;
-  z-index: 999;
+  z-index: 9999;
 
+}
+
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
+ul.ds-subsection-menu-ul:hover
+{
+  visibility: visible;
+  transition-delay: 0s; /* react immediately on hover */
+  display: block !important;
+  z-index: 9999;
+
+}
+div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover button.ds-section-menu-option-top-level
+{
+      background-color: #6e2aa2;
+    color: #1a1a1a;
+width: 200px;
+width: 100%;
+  visibility: visible !important;
+ display: block !important;
+  
 }
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu 
 ul.ds-subsection-menu-ul:hover  ~ ul.ds-options-section-list li.ds-section-menu-option-li  button.ds-section-menu-option-top-level div.ds-section-menu-option-text
@@ -513,14 +534,8 @@ div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-sectio
 {
   visibility: visible;
   transition-delay: 0s; /* react immediately on hover */
-  position: absolute;
-  left: auto;
-
-  margin-left: 40px;
-  min-width: 175px;
-  top: auto;
-    z-index: 999;
   display: block !important;
+  z-index: 9999;
 }
 
 div.ds-options-menu-wrap.ds-menu-folded div.ds-options-menu ul.ds-options-section-list li.ds-section-menu-option-li:hover 
@@ -638,7 +653,7 @@ margin: 0;
 div.ds-options-menu-wrap {
 	margin: 0;
 	padding: 0px;
-
+	z-index: 9999;
 }
 div.ds-options-menu-wrap div.ds-options-menu {
 	vertical-align: top;
