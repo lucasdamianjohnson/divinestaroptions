@@ -72,6 +72,8 @@ docReady(function() {
    document.querySelectorAll('.ds-options-sortablelist').forEach(item => {
 
       new Sortable(item, {
+     swap: true,
+  swapClass: 'highlight', 
    animation: 150,
    ghostClass: 'sortable-ghost',
 
