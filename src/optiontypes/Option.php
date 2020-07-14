@@ -15,12 +15,21 @@ abstract class Option
 {
 
 	/**
-	* Get the JSON structure from the XML file for each option type.
+	* Generates the JSON structure with data provided by the options form on submission. 
 	*
 	* @param string $type The option type.
-	* @param string $args If the value of the type is a string just pass a string.
-	* array $args If the value needs more values pass the args in an array.
+	* @param string $save_data If the value of the type is a string just pass a string.
+	* array $save_data If the value needs more values pass the args in an array.
 	* @param string $mode The mode for the option type.
+	* @return array An array of the option data from the XML. 
+	* @access public
+	*/
+	abstract public function generate_save_data_structure($type,$save_data,$mode=null) : array;
+
+	/**
+	* Get the JSON structure from the XML file for each option type.
+	*
+	* @param string $option The option XML object 
 	* @return array An array of the option data from the XML. 
 	* @access public
 	*/
@@ -113,6 +122,104 @@ HTML;
 		<tr>$title<td>$content</td></tr>
 HTML;
 	}
+
+
+	/**
+	* Wrap some HTML content in a HTML tag
+	*
+	* This is used for list option types. 
+	*
+	* @param array $wrap_in Array of string. The first index being the main wrap tag and 
+	* others must the group tags.
+	* Ex: ['option','optgroup']
+	* @param string $wrap_tags The HTML tags for that container.
+	* @param array $data The data to wrap in array form. 
+	* XML object the default data to wrap from the form.
+	* @param bool $array If the data being wraped is an array
+	* @param string $value Use this to set an active option. 
+	* @return string The wraped HTML content.
+	* @access protected
+	*/
+
+	protected function wrap_elemnts($wrap_in,$wrap_tags,$data,$array = false,$value='') : string
+	{
+		if(!is_array($wrap_in)) {
+			throw new Exception('Error: $wrap_in must be an array for Option wrap_element()');
+		}
+
+		$wrap_tag = $wrap_in[0];
+		$wrap_group_tg = $wrap_in[1];
+		$return_html = '';
+
+		if($array) {
+			foreach ($data as $key => $datavalue) {
+			$return_html .= <<<HTML
+			<$wrap_tag $wrap_tags data-value='{$datavalue}'>$datavalue</$wrap_tag>
+HTML;
+			}
+
+
+		} else {
+
+
+		foreach ($data->so->sog as $sog) {
+			$glabel = $sog['label'];
+			$return_html .= <<<HTML
+			<$wrap_group_tg label='{$glabel}'>
+HTML;
+
+			foreach($sog->o as $o ) {
+			$ot = (string) $o;
+			$ovalue = '';
+			if(isset($o['value'])) {
+				$ov = $o['value'];	
+				$ovalue = "value='$ov'";
+			} else {
+				$ov = $ot;
+				$ovalue = "data-value='$ov'";
+			}
+			
+			if($ov == $value) {
+				$selected = 'selected="selected"';
+			} else {
+				$selected = '';
+			}
+			$return_html .= <<<HTML
+			<$wrap_tag {$selected} $wrap_tags $ovalue>$ot</$wrap_tag>
+HTML;
+			}	
+
+			$return_html .= <<<HTML
+			</$wrap_group_tg>
+HTML;	
+		}
+
+		foreach ($data->so->o as $o) {
+		    $ot = (string) $o;
+			$ovalue = '';
+			if(isset($o['value'])) {
+				$ov = $o['value'];	
+				$ovalue = "value='$ov'";
+			} else {
+				$ov = $ot;
+				$ovalue = "data-value='$ov'";
+			}
+
+			if($ov == $value) {
+				$selected = 'selected="selected"';
+			} else {
+				$selected = '';
+			}
+			$return_html .= <<<HTML
+			<$wrap_tag {$selected} $wrap_tags value='{$ov}' data-value='{$ov}'>$ot</$wrap_tag>
+HTML;
+		}
+
+
+		}
+
+		return $return_html;
+	} 
 
 
 }

@@ -14,6 +14,13 @@
 class Content extends Option 
 {
 
+	public function generate_save_data_structure($type,$save_data,$mode=null) : array
+	{
+
+	return array('false');
+	}
+
+
 	public function load_from_xml($option) : array
 	{
 		$type = (string) $option['type'];

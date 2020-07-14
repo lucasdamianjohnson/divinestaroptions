@@ -94,8 +94,8 @@ private $options;
 	    $this->dso->load_options($going_to);
 	    
 		$data = $_POST;
+
 		print_r($data);
-		print_r($this->dso->get_loaded_options());
 
 	    foreach ($data['divinestaroptions'] as $type => $typedata) {
 	    			
@@ -103,59 +103,14 @@ private $options;
 	    	foreach ($typedata as $key => $value) {
 	    			$type = (string) $type;
 	    	
-
+					if(isset($value['mode'])) {
+					$mode = $value['mode'];
+					} else {
+					$mode = null;
+					}
+					$newvalue = $this->options->generate_save_data_structure($type,$value,$mode);
 	    			
-	    		if($this->options->is_type($type,'SimpleTypes')) {
-	    			print_r(array($key,$value));
-	    			try{
-	    		    $this->dso->set_option($key,$value);
-	    			} catch (Excecption $e) {
-	    				echo "$e";
-	    			}
-	    		}
-	    		
-	    		if($type == 'singleimage') {
-	    			$mode = $value['mode'];
-	    			if($mode == "wp") {
-
-	    			$newvalue = $this->options->get_value_structure(
-	    				$type,
-	    			 	[
-	    			 	$value['id'],
-	    			 	$value['orgsrc'],
-	    			 	$value['size'],
-	    			 	$value['src'],
-	    			 	$value['alt'],
-	    			 	$value['title'],
-	    			 	$value['caption'],
-	    			 	$value['description'],
-	    			 	$value['orgwidth'],
-	    			 	$value['orgheight']
-	    			 ],
-	    			 $mode
-	    			);
-	    		    }
-	    		    if($mode == "url") {
-
-	    			$newvalue = $this->options->get_value_structure(
-	    				$type,
-	    			 	[
-	    			 	$value['url'],
-	    			 	$value['alt'],
-	    			 	$value['title'],
-	    			 	$value['caption'],
-	    			 	$value['description'],
-	    			 	$value['width'],
-	    			 	$value['height']
-	    			 ],
-	    			 $mode
-	    			);
-	    		    }
-	    			$this->dso->set_option($key,$newvalue);
-	    	
-	    		}
-	    				
-			
+					$this->dso->set_option($key,$newvalue[0]);
 			
 	    	}
 			
@@ -938,7 +893,22 @@ span.ds-options-form-error {
 	height: 80px;
 }
 /*********************************************/
-
+/*Drag And Drop Form Elements*/
+.ds-options-sortablelist .ds-options-sortablelist-group-item {
+  border-radius: 0;
+  cursor: move;
+  margin-bottom: 2px;
+  border: 2px solid grey;
+  padding: 5px;
+}
+.ds-options-sortablelist-ghost {
+  border: 2px solid #0071a1;
+  background-color: #e6e6e6;
+}
+.ds-options-sortablelist .list-group-item:hover {
+  background-color: #f7f7f7;
+}
+/*********************************************/
 
 </style>
 HTML;	

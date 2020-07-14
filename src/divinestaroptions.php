@@ -1,8 +1,8 @@
 <?php
-/*ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-*/
+
 /**
 * Get and set options.
 *
@@ -21,7 +21,6 @@ class DivineStarOptions
 	private $dsbfo;
 	private $loaded_options;
 	private $simple_time;
-
 
 
 	function __construct() {
@@ -156,39 +155,6 @@ HTML;
 
     }
 
-
-
-	function load_into_files($xml) {
-		$json = array("json_name"=>"ƒ");
-
-		$sections = $this->load_options_xml($xml);
-		$i = 0;
-
-		$ignore_options = array("formhtml","custom_function");
-		foreach($sections->section as $section) {
-
-			foreach($section->option as $option){
-				$type = (string) $option['type'];
-				if(array_search($type, $ignore_options ) !== false) {continue;}
-				$json["$option->name"] = $this->get_start_json_data_structure($option);
-
-			}
-			foreach($section->subsection as $ssection){
-
-				foreach($ssection->option as $soption){
-			        $type = (string) $option['type'];
-				    if(array_search($type, $ignore_options ) !== false) {continue;}
-					$json["$soption->name"] = $this->get_start_json_data_structure($option);
-				}
-
-			}
-
-
-		}
-
-
-		$this->save_value_json('generaloptions',$json);
-	}
 
 
 

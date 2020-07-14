@@ -19,6 +19,13 @@ private $types;
 private $simple_types;
 
 
+
+	public function generate_save_data_structure($type,$save_data,$mode=null) : array
+	{
+
+	return array($this->get_value_structure($type,$save_data,$mode)[0]);
+	}
+
 	public function __construct() 
 	{
 		$this->simple_type  = array("text","number","checkbox","selectdropdown");
@@ -37,7 +44,11 @@ private $simple_types;
 public function get_value_structure($type,$args,$mode = null) : array 
 {
 
-	return array();
+	if(is_array($args)) {
+	  //possible error;
+	}
+
+	return array($args);
 }
 
 
@@ -109,28 +120,14 @@ public function get_value_structure($type,$args,$mode = null) : array
 
 
 		$form_name = "divinestaroptions[selectdropdown][$name]";
-		$form_data = '';
-		foreach($option->so->o as $key => $ovalue) {
 
-		  $form_data .= <<<HTML
-<a tabindex="0" onclick='clieckedDropDownSearchOption("{$ovalue}","{$form_name}",defaultCallBack)' class='ds-dropdown-search-item' >$ovalue</a>
-HTML;
-
-		}
+	    $wrap_tags = "tabindex='0' onclick='clieckedDropDownSearchOption(event,\"$form_name\",defaultCallBack)' class='ds-dropdown-search-item'";
+		$form_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$option);
 
 
 
 
 	$html = <<<HTML
-<style type="text/css">
-
-</style>
-<script type="text/javascript">
-
-
-
-
-</script>
 <div class='flex-row'>
 
 <div class="flex-col flex-center">
@@ -196,45 +193,8 @@ HTML;
 		}
 
 
-		$o_html = '';
-		foreach ($option->so->sog as $sog) {
-			$glabel = $sog['label'];
-			$o_html .= <<<HTML
-			<optgroup label='{$glabel}'>
-HTML;
+		$o_html = $this->wrap_elemnts(['option','optgroup'],'',$option,false,$value);
 
-			foreach($sog->o as $o ) {
-			$ov = $o['value'];
-			$ot = (string) $o;
-
-			if($ov == $value) {
-				$selected = 'selected="selected"';
-			} else {
-				$selected = '';
-			}
-			$o_html .= <<<HTML
-			<option {$selected} value='{$ov}'>$ot</option>
-HTML;
-			}	
-
-			$o_html .= <<<HTML
-			<optgroup>
-HTML;	
-		}
-
-		foreach ($option->so->o as $o) {
-			$ov =  $o['value'];
-			$ot = (string) $o;
-
-			if($ov == $value) {
-				$selected = 'selected="selected"';
-			} else {
-				$selected = '';
-			}
-			$o_html .= <<<HTML
-			<option {$selected} value='{$ov}'>$ot</option>
-HTML;
-		}
 
 		return <<<HTML
 <tr>

@@ -14,6 +14,53 @@
 class Images extends Option  
 {
 
+
+	public function generate_save_data_structure($type,$save_data,$mode=null) : array
+	{
+		$newvalue = '';
+		if($type == 'singleimage') {
+	    			
+	    			if($mode == "wp") {
+
+	    			$newvalue = $this->get_value_structure(
+	    				$type,
+	    			 	[
+	    			 	$save_data['id'],
+	    			 	$save_data['orgsrc'],
+	    			 	$save_data['size'],
+	    			 	$save_data['src'],
+	    			 	$save_data['alt'],
+	    			 	$save_data['title'],
+	    			 	$save_data['caption'],
+	    			 	$save_data['description'],
+	    			 	$save_data['orgwidth'],
+	    			 	$save_data['orgheight']
+	    			 ],
+	    			 $mode
+	    			);
+	    		    }
+	    		    if($mode == "url") {
+
+	    			$newvalue = $this->get_value_structure(
+	    				$type,
+	    			 	[
+	    			 	$save_data['url'],
+	    			 	$save_data['alt'],
+	    			 	$save_data['title'],
+	    			 	$save_data['caption'],
+	    			 	$save_data['description'],
+	    			 	$save_data['width'],
+	    			 	$save_data['height']
+	    			 ],
+	    			 $mode
+	    			);
+	    		    }
+	    	
+	    	
+	    		}
+	return array($newvalue);
+	}
+
 	 public function load_from_xml($option) : array 
 	 {
 	 	$type = $option['type'];

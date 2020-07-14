@@ -15,6 +15,13 @@ class DragAndDrop extends Option
 {
 
 
+
+	public function generate_save_data_structure($type,$save_data,$mode=null) : array
+	{
+
+	return array($this->get_value_structure($type,$save_data,$mode)[0]);
+	}
+
 	public function load_from_xml($option) : array
 	{
 		$type = (string) $option['type'];
@@ -35,7 +42,7 @@ class DragAndDrop extends Option
 	public function get_value_structure($type,$args,$mode = null) : array
 	{
 
-		return array();
+		return array($args);
 	}
 
 	
@@ -88,22 +95,18 @@ class DragAndDrop extends Option
 
 		$form_name = "divinestaroptions[selectdropdown][$name]";
 		$form_data = '';
-		$i = 2;
-		foreach($option->so->o as $key => $ovalue) {
-		  $data_value = $ovalue['value'];
+
+		if($value != '') {
+		$wrap_tags = "tabindex='0'   data-name='$form_name' class='ds-options-sortablelist-group-item'";
+		$data = explode(",", $value);
+		prev($data);
+		$form_data = $this->wrap_elemnts(['li','ul'],$wrap_tags,$data,true);
 
 
-		  $form_data .= <<<HTML
-<li tabindex="0"   data-name='{$form_name}' class="list-group-item" data-id="{$i}" data-value='{$data_value}'>
-    <div>
-      <p class="">
-$ovalue
-	</p>
-    </div>
-</li>
-HTML;
-			$i++;
-		}
+	 } else {
+
+	 	$form_data = $this->wrap_elemnts(['li','ul'],$wrap_tags,$option);
+	 }
 
 
 		$form_html = <<<HTML

@@ -30,23 +30,28 @@ private $option_types;
 
       foreach ($types as $value) {
          if(class_exists($value)) {
-         $this->option_type[$value] = new $value;
+         $this->option_types[$value] = new $value;
          } else {
          throw new Exeption('The required option class of '.$value.' was not found.');
          }
       }
 
-	   	$this->option_types =array(
-      'SimpleTypes' => new SimpleTypes,
-      'TextStyles' => new TextStyles,
-		  'Content' => new Content,
-	   	'Images' => new Images,
-	    'Generic' => new Generic,
-      'DragAndDrop' => new DragAndDrop
-    );
+
 
 	   }
 
+
+   public function generate_save_data_structure($type,$save_data,$mode=null) : array
+   {
+
+       foreach ($this->option_types as $key => $optype) {
+          if($optype->is_type($type)) {
+      return $optype->generate_save_data_structure($type,$save_data,$mode);
+      }
+         }
+
+      return array('false');
+   }
 
 
    public function load_from_xml($option) : array 

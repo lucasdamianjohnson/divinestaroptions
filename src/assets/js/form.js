@@ -28,7 +28,12 @@ function filterFunction(form) {
   }
 }
 
-function clieckedDropDownSearchOption(value,form,callback) {
+function clieckedDropDownSearchOption(event,form,callback) {
+
+  console.log(form);
+  var value = event.target.getAttribute('data-value');
+
+
   var orgvalue = value;
   if(value.length >= 16 ) {
     var split = value.split(" ");
@@ -67,21 +72,7 @@ function defaultCallBack(value,form) {
   return true;
 }
 
-docReady(function() {
-//ds-options-sortablelist
-   document.querySelectorAll('.ds-options-sortablelist').forEach(item => {
-
-      new Sortable(item, {
-     swap: true,
-  swapClass: 'highlight', 
-   animation: 150,
-   ghostClass: 'sortable-ghost',
-
-    onEnd: function (/**Event*/evt) {
-    var itemEl = evt.item;  // dragged HTMLElement
-    console.log('the dragging ended');
-    console.log(itemEl.getAttribute('data-name'));
-    var name = itemEl.getAttribute('data-name');
+function updateDragAndDropValue(name) {
     var ul = document.getElementById(name+"-sortablelist");
     var li = ul.getElementsByTagName('li');
 
@@ -92,6 +83,22 @@ docReady(function() {
    }
    namevalue.join(",");
    document.getElementById(name).value = namevalue;
+}
+
+docReady(function() {
+//ds-options-sortablelist
+
+
+   document.querySelectorAll('.ds-options-sortablelist').forEach(item => {
+
+      new Sortable(item, {
+      animation: 150,
+      ghostClass: 'ds-options-sortablelist-ghost',
+    onEnd: function (/**Event*/evt) {
+    var itemEl = evt.item;  // dragged HTMLElement
+    var name = itemEl.getAttribute('data-name');
+
+    updateDragAndDropValue(name);
 
   },
 

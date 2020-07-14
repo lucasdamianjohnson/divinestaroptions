@@ -14,6 +14,13 @@
 class TextStyles extends Option
 {
 	
+
+	public function generate_save_data_structure($type,$save_data,$mode=null) : array
+	{
+
+		return array($this->get_value_structure($type,$save_data,$mode));
+	}
+
 	
 	public function load_from_xml($option) : array
 	{
@@ -92,11 +99,11 @@ class TextStyles extends Option
 		}
 
 		  natcasesort($font_array);
-		 foreach ($font_array as $key => $font) {
-		  $font_data .= <<<HTML
-<a tabindex="0" onclick='clieckedDropDownSearchOption("{$font}","{$form_name}",updateFontDisplay)' class='ds-dropdown-search-item' data-value='$font'>$font</a>
-HTML;
-}
+
+		$wrap_tags = "tabindex='0' onclick='clieckedDropDownSearchOption(event,\"$form_name\",updateFontDisplay)' class='ds-dropdown-search-item'";
+		$font_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$font_array,true);
+
+
 		 
 
 

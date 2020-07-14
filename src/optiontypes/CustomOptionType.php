@@ -14,6 +14,13 @@
 class CustomOptionType extends Option 
 {
 
+
+	public function generate_save_data_structure($type,$save_data,$mode=null) : array
+	{
+
+		return array($this->get_value_structure($type,$save_data,$mode));
+	}
+
  	public function load_from_xml($option) : array
 	{
 		$type = (string) $option['type'];
