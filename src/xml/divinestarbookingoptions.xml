@@ -48,14 +48,62 @@ Divine Star Options
 	    <option type="singleimage" mode="wp" >
 	    	<name>logo</name>
 	    	<label>Logo</label>
-	    	<value>11</value>
+	    	<value>12</value>
 	    	<size>150 150</size>
 	    </option>
 	    <option type="singleimage" mode="wp" >
 	    	<name>otherlogo</name>
 	    	<label>Other Logo</label>
-	    	<value>11</value>
+	    	<value>13</value>
 	    	<size>150 150</size>
+	    </option>
+	    <option type="sortablelist" mode="">
+			<label>Sortable List</label>
+			<name>sortablelist1</name>
+			<value>option6</value>
+			<description> This is a description for a sortable list.</description>
+			<so>
+					<o value='option1'>Option 1</o>
+					<o value='option2'>Option 2</o>
+					<o value='option3'>Option 3</o>
+					<o value='option4'>Option 4</o>
+					<o value='option5'>Option 5</o>
+					<o value='option6'>Option 6</o>
+					<o value='option7'>Option 7</o>
+					<o value='option8'>Option 8</o>
+					<o value='option9'>Option 9</o>
+					<o value='option10'>Option 10</o>
+					<o value='option11'>Option 11</o>
+					<o value='option12'>Option 12</o>
+					<o value='option13'>Option 13</o>
+					<o value='option14'>Option 14</o>
+					<o value='option15'>Option 15</o>
+					<o value='option16'>Option 16</o>
+			</so>
+	    </option>
+	    <option type="sortablelist" mode="">
+			<label>Sortable List</label>
+			<name>sortablelist2</name>
+			<value>option5</value>
+			<description> This is a description for a sortable list.</description>
+			<so>
+					<o value='option1'>Option 1</o>
+					<o value='option2'>Option 2</o>
+					<o value='option3'>Option 3</o>
+					<o value='option4'>Option 4</o>
+					<o value='option5'>Option 5</o>
+					<o value='option6'>Option 6</o>
+					<o value='option7'>Option 7</o>
+					<o value='option8'>Option 8</o>
+					<o value='option9'>Option 9</o>
+					<o value='option10'>Option 10</o>
+					<o value='option11'>Option 11</o>
+					<o value='option12'>Option 12</o>
+					<o value='option13'>Option 13</o>
+					<o value='option14'>Option 14</o>
+					<o value='option15'>Option 15</o>
+					<o value='option16'>Option 16</o>
+			</so>
 	    </option>
 	    <option type="selectdropdown" mode="searchable">
 			<label>Drop Down With Option Group</label>

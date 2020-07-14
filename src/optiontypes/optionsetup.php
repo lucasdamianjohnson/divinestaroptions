@@ -17,5 +17,7 @@ require_once('TextStyles.php');
 require_once('Images.php');
 require_once('Generic.php');
 require_once('Options.php');
+require_once('DragAndDrop.php');
+
 /*Add Custom Types Below*/
 require_once('CustomOptionType.php');

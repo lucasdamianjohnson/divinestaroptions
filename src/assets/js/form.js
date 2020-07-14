@@ -68,7 +68,34 @@ function defaultCallBack(value,form) {
 }
 
 docReady(function() {
+//ds-options-sortablelist
+   document.querySelectorAll('.ds-options-sortablelist').forEach(item => {
 
+      new Sortable(item, {
+   animation: 150,
+   ghostClass: 'sortable-ghost',
+
+    onEnd: function (/**Event*/evt) {
+    var itemEl = evt.item;  // dragged HTMLElement
+    console.log('the dragging ended');
+    console.log(itemEl.getAttribute('data-name'));
+    var name = itemEl.getAttribute('data-name');
+    var ul = document.getElementById(name+"-sortablelist");
+    var li = ul.getElementsByTagName('li');
+
+    var namevalue = new Array();
+   for (i = 0; i < li.length; i++) {
+
+      namevalue.push(li[i].getAttribute('data-value'));
+   }
+   namevalue.join(",");
+   document.getElementById(name).value = namevalue;
+
+  },
+
+ });
+
+   });
 
 
 

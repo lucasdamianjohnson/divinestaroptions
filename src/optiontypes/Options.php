@@ -16,15 +16,50 @@ final class Options extends Option
 
 
 private $option_types;
+
+
 	   public function __construct() {
+      $types = array(
+      'SimpleTypes',
+      'TextStyles',
+      'Content' ,
+      'Images',
+      'Generic',
+      'DragAndDrop'
+      );
+
+      foreach ($types as $value) {
+         if(class_exists($value)) {
+         $this->option_type[$value] = new $value;
+         } else {
+         throw new Exeption('The required option class of '.$value.' was not found.');
+         }
+      }
+
 	   	$this->option_types =array(
       'SimpleTypes' => new SimpleTypes,
       'TextStyles' => new TextStyles,
 		  'Content' => new Content,
 	   	'Images' => new Images,
-	    'Generic' => new Generic);
+	    'Generic' => new Generic,
+      'DragAndDrop' => new DragAndDrop
+    );
 
 	   }
+
+
+
+   public function load_from_xml($option) : array 
+   {
+    $type = $option['type'];
+         foreach ($this->option_types as $key => $optype) {
+          if($optype->is_type($type)) {
+      return $optype->load_from_xml($option);
+      }
+         }
+
+    return array();
+   }
 
 
 	public function add_option_type($option_class_name) {
@@ -36,7 +71,8 @@ private $option_types;
 		return $this->option_types[$type];
 	}
 
-	public function get_value_structure($type,$args,$mode = null) : array {
+	public function get_value_structure($type,$args,$mode = null) : array 
+  {
 
    	 foreach ($this->option_types as $key => $optype) {
     	 	  if($optype->is_type($type)) {
@@ -48,7 +84,8 @@ private $option_types;
 }
 
        
-    public function get_data_strcutre($type,$args,$mode = null) : array {
+    public function get_data_strcutre($type,$args,$mode = null) : array 
+    {
 
        foreach ($this->option_types as $key => $optype) {
           if($optype->is_type($type)) {

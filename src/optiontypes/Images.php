@@ -14,11 +14,59 @@
 class Images extends Option  
 {
 
+	 public function load_from_xml($option) : array 
+	 {
+	 	$type = $option['type'];
+	 	$mode = $option['mode'];
+	 	$value = (string)$option->value;
+	 	$value = trim($value);
+	 	if($type == 'singleimage') {
+	 	  if($mode == "wp" && $value != '') {
+	 	$name = $option->name;
+		$size = (string) $option->size;
+		$osize = $size;
+		if(count(explode(" ", $size)) > 1) {
+		$size = explode(" ", $size);
+		} 
+	 	$imgdata = $this->wp_get_attachment($value);
+		$src = wp_get_attachment_image_src( $value,  $size)[0];
+      	$orgimage = wp_get_attachment_image_src( $value,  'full');
+      	$orgimage_src =  $orgimage[0];
+      	$orgimage_width =  $orgimage[1];
+      	$orgimage_height =  $orgimage[2];
+
+
+      	return $this->get_data_strcutre($type,
+      		    [$value,
+      			$orgimage_src,
+      			$osize,
+      			$src,
+      			$imgdata['alt'],
+      			$imgdata['title'],
+      			$imgdata['caption'],
+      			$imgdata['description'],
+      			$orgimage_width,
+      			$orgimage_height]
+      			,$mode);
+
+        } else {
+        return $this->get_data_strcutre($type,
+      		  ['','','','','','','','','',''],$mode);
+        }
 
 
 
+       } 
 
-	 public function get_value_structure($type,$args,$mode = null) : array {
+
+
+	 	return array();
+	 }
+
+
+
+	 public function get_value_structure($type,$args,$mode = null) : array 
+	 {
 		$imgvalue = array();
 				if($mode == "wp") {
     				$imgvalue =array( 
@@ -57,7 +105,7 @@ class Images extends Option
 
     			if($type == 'singleimage') {
 
-    			$imgvalue =  $this->get_value_structure($type,$args,$mode=null);
+    			$imgvalue =  $this->get_value_structure($type,$args,$mode);
 
     		
 				$data = array( 
@@ -132,8 +180,6 @@ return array(
 
 		if($value !== "" && function_exists('wp_get_attachment_image_src')) {
 
-
-		$post = implode(',',$this->wp_get_attachment($value));
 		$imgdata = $this->wp_get_attachment($value);
 		
 		$src = wp_get_attachment_image_src( $value,  $size)[0];

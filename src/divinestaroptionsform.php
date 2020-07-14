@@ -15,11 +15,11 @@ include('divinestaroptionscustomsfunctions.php');
 */
 class DivineStarOptionsForm
 {
-	
 private $dso;
 private $dsocf;
 private $simple_types;
 private $options;
+
     function __construct() {
     	$this->dsocf = new DivineStarOptionsCustomFunctions;
     	$this->options = new Options;	
@@ -28,6 +28,41 @@ private $options;
         add_action( 'wp_ajax_divine_star_updateoptions', array( $this,'update_options') );
    		}
     }
+
+
+
+
+	function load_into_files($xml) {
+		$json = array("json_name"=>"$xml");
+
+		$sections = $this->load_options_xml($xml);
+
+		foreach($sections->section as $section) {
+
+			foreach($section->option as $option){
+		
+				$json["$option->name"] = $this->options->load_from_xml($option);
+
+			}
+			foreach($section->subsection as $ssection){
+
+				foreach($ssection->option as $soption){
+
+					$json["$soption->name"] = $this->options->load_from_xml($option);
+
+				}
+
+			}
+
+
+		}
+
+
+		$this->dso->save_value_json('generaloptions',$json);
+	}
+
+
+
 
 
     function get_options() {
@@ -203,9 +238,12 @@ return array(
 
 
     function enqueue_scripts() {
+      if(function_exists('wp_enqueue_media')) {
       wp_enqueue_media();
       wp_enqueue_script('dsoption_form_functions',plugins_url('assets/js/functions.js',__FILE__) );
       wp_enqueue_script('dsoption_form_js',plugins_url('assets/js/form.js',__FILE__) );
+      wp_enqueue_script('ds_options_sortable_js',plugins_url('assets/js/sortable/Sortable.min.js',__FILE__) );
+      }
      // wp_enqueue_script('dsoption_form_functions',OPTIONS_PATH.'assets/js/functions.js' );
      // wp_enqueue_script('dsoption_form_main',OPTIONS_PATH.'assets/js/form.js' );
     }

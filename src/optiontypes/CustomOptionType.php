@@ -13,6 +13,17 @@
 */
 class CustomOptionType extends Option 
 {
+
+ 	public function load_from_xml($option) : array
+	{
+		$type = (string) $option['type'];
+		$mode = (string) $option['mode'];
+		$value = (string) $option->value;
+		return $this->get_data_strcutre($type,$value,$mode);
+	}
+
+
+
  public function get_value_structure($type,$args,$mode = null) : array {
   return array();
 }

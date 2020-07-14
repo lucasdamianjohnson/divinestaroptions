@@ -19,19 +19,31 @@ private $types;
 private $simple_types;
 
 
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->simple_type  = array("text","number","checkbox","selectdropdown");
 	}
 
 
-public function get_value_structure($type,$args,$mode = null) : array {
+	public function load_from_xml($option) : array
+	{
+		$type = (string) $option['type'];
+		$mode = (string) $option['mode'];
+		$value = (string) $option->value;
+		return $this->get_data_strcutre($type,$value,$mode);
+	}
+
+
+public function get_value_structure($type,$args,$mode = null) : array 
+{
 
 	return array();
 }
 
 
 
- public function  get_data_strcutre($type,$args,$mode = null) : array {
+ public function  get_data_strcutre($type,$args,$mode = null) : array 
+ {
     	return  array(
 					'value' => $args,
 					'type' => $type 
@@ -39,15 +51,16 @@ public function get_value_structure($type,$args,$mode = null) : array {
   }
 	
 
-  public function is_type($type) : bool {
-
-  	     return array_search($type, $this->simple_type ) !== false;
+  public function is_type($type) : bool 
+  {
+  	return array_search($type, $this->simple_type ) !== false;
   }
 
 
 
 
-    public function get_html($type,$option,$value) : string {
+    public function get_html($type,$option,$value) : string 
+    {
     	if(isset($option['mode'])) {
   			$mode = $option['mode'];
   		} else {

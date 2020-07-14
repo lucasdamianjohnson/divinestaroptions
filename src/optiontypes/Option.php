@@ -15,6 +15,18 @@ abstract class Option
 {
 
 	/**
+	* Get the JSON structure from the XML file for each option type.
+	*
+	* @param string $type The option type.
+	* @param string $args If the value of the type is a string just pass a string.
+	* array $args If the value needs more values pass the args in an array.
+	* @param string $mode The mode for the option type.
+	* @return array An array of the option data from the XML. 
+	* @access public
+	*/
+	abstract public function load_from_xml($option) : array;
+
+	/**
 	* Get the option value of the currently loaded options.
 	*
 	* @param string $type The option type.

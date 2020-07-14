@@ -15,7 +15,13 @@ class TextStyles extends Option
 {
 	
 	
-
+	public function load_from_xml($option) : array
+	{
+		$type = (string) $option['type'];
+		$mode = (string) $option['mode'];
+		$value = (string) $option->value;
+		return $this->get_data_strcutre($type,$value,$mode);
+	}
 
 
 	public function get_value_structure($type,$args,$mode = null) : array
@@ -78,27 +84,25 @@ class TextStyles extends Option
 		$fonts = $this->get_fonts();
 		$form_name = "divinestaroptions[font][$name]";
 		$font_data = '';
+		$font_array = array();
 		foreach($fonts as $font_family => $ff) {
 		  foreach ($ff as $key => $font) {
+		  		$font_array[] = $font;
+		  	 }
+		}
+
+		  natcasesort($font_array);
+		 foreach ($font_array as $key => $font) {
 		  $font_data .= <<<HTML
 <a tabindex="0" onclick='clieckedDropDownSearchOption("{$font}","{$form_name}",updateFontDisplay)' class='ds-dropdown-search-item' data-value='$font'>$font</a>
 HTML;
-		  }
-		}
+}
+		 
 
 
 
 
 	$html = <<<HTML
-<style type="text/css">
-
-</style>
-<script type="text/javascript">
-
-
-
-
-</script>
 <div class='flex-row'>
 
 <div class="flex-col flex-center">
@@ -135,9 +139,7 @@ HTML;
 </div>
 
 </div>
-
 </div>
-
 
 <br>
 <div class='ds-options-font-display'>
