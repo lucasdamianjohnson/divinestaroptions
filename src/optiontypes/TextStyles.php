@@ -53,7 +53,7 @@ class TextStyles extends Option
 	}
 
 
-	public function get_html($type,$option,$value) : string
+	public function get_html($type,$option,$value,$args=null) : string
 	{
 		$mode = $option['mode'];
 		
@@ -101,7 +101,7 @@ class TextStyles extends Option
 		  natcasesort($font_array);
 
 		$wrap_tags = "tabindex='0' onclick='clieckedDropDownSearchOption(event,\"$form_name\",updateFontDisplay)' class='ds-dropdown-search-item'";
-		$font_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$font_array,true);
+		$font_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$font_array);
 
 
 		 

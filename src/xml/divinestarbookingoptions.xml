@@ -4,6 +4,47 @@ Divine Star Options
 -->
 <divinestarbookingformoptions>
 	<section for='generaloptions' name="mainoptins" title="Main Options" icon="dashicons-dashboard">
+		<option type='optiongroup' name='optiongroup1' mode='normal'>
+			<option type="text">
+				<label>Text Option 1</label>
+				<name>test1</name>
+				<value>#1a1a1a</value>
+				<description> This is the first test option. </description>
+			</option> 
+			<option type="number">
+				<label>Number Option 1</label>
+				<name>test2</name>
+				<value>6</value>
+				<description> This is a group number option. </description>
+			</option> 
+		    <option type="selectdropdown">
+			<label>Drop Down With Option Group</label>
+			<name>selectdropdownoptiongroup</name>
+			<value>option5</value>
+			<description> This is a description for a select.</description>
+			<so>
+				<sog label='Group 1'>
+					<o value='option1'>Option 1</o>
+					<o value='option2'>Option 2</o>
+					<o value='option3'>Option 3</o>
+					<o value='option4'>Option 4</o>
+				</sog>
+				<sog label='Group 2'>
+					<o value='option5'>Option 5</o>
+					<o value='option6'>Option 6</o>
+					<o value='option7'>Option 7</o>
+					<o value='option8'>Option 8</o>
+				</sog>
+			</so>
+	    </option>
+			<option type="checkbox">
+		    	<title>Check box test</title>
+				<label>This is a checkbox</label>
+				<name>checkboxtest1</name>
+				<value>true</value>
+				<description> This is a description for a checkbox.</description>
+	   		</option>
+		</option>
 		<option type="text">
 			<label>Text Option 1</label>
 			<name>test1</name>
@@ -56,6 +97,92 @@ Divine Star Options
 	    	<label>Other Logo</label>
 	    	<value>13</value>
 	    	<size>150 150</size>
+	    </option>
+	    <option 
+	    	type="doublesortablelist" 
+	    	mode="" 
+	    	left-remove="false" right-remove="true"
+	    	left-expand="true" right-expand="true"
+	    	left-swap="false" right-swap="true" 
+	    	left-multidrag="false" right-multidrag="true" 
+	    	left-put="false" right-put="true"
+	    	left-pull="clone" right-pull="false" 
+	    	left-sort="false" right-sort="true"
+	    	left-max="false" right-max="6"
+	    	left-min="false" right-min="1"
+	    	left-input="false" right-input="true"
+	    	>
+			<label>Double Sortable List</label>
+			<name>doublesortablelist1</name>
+			<value>option6</value>
+			<description> This is a description for a sortable list.</description>
+			<so>
+					<o cid='1' value='option1'>
+					Option 1
+					</o>
+					<o cid='2' value='option2'>
+						Option 2
+					</o>
+					<o cid='3' value='option3'>
+						Option 3
+					</o>
+					<o cid='4' value='option4'>
+						Option 4
+					</o>
+					<o cid='5' value='option5'>
+						Option 5
+					</o>
+					<o cid='6' value='option6'>
+						Option 6
+					</o>
+					<o cid='7' value='option7'>
+						Option 7
+					</o>
+					<o cid='8' value='option8'>
+						Option 8
+					</o>
+					<o cid='9' value='option9'>
+						Option 9
+					</o>
+			</so>
+			<socontent>
+				<content cid='1' type='html'>
+				<![CDATA[
+				<label>Label for text:
+				<input type='text' value='blah' placeholder='blah'/></label>
+				<p>This is the text for optin 1.</p> 
+				]]>
+				</content>
+				<content cid='2' type='html'>
+				<![CDATA[<p>This is the text for optin 2.</p> ]]>
+				</content>
+				<content cid='3' type='html'>
+				<![CDATA[<p>This is the text for optin 3.</p> ]]>
+				</content>
+				<content cid='4' type='html'>
+				<![CDATA[<p>This is the text for optin 4.</p> ]]>
+				</content>
+				<content cid='5' type='html'>
+				<![CDATA[<p>This is the text for optin 5.</p> ]]>
+				</content>
+				<content cid='6' type='html'>
+				<![CDATA[<p>This is the text for optin 6.</p> ]]>
+				</content>
+				<content cid='7' type='html'>
+				<![CDATA[<p>This is the text for optin 7.</p> ]]>
+				</content>
+				<content cid='8' type='html'>
+				<![CDATA[<p>This is the text for optin 8.</p> ]]>
+				</content>
+				<content cid='9' type='html'>
+				<![CDATA[<p>This is the text for optin 9.</p> ]]>
+				</content>
+			</socontent>
+			<default>
+					<o value='option1'>Option 1</o>
+					<o value='option2'>Option 2</o>
+					<o value='option3'>Option 3</o>
+			</default>
 	    </option>
 	    <option type="sortablelist" mode="">
 			<label>Sortable List</label>

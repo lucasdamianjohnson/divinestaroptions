@@ -40,7 +40,7 @@ class CustomOptionType extends Option
 					'type' => $type 
 				); 
 }
- public function get_html($type,$option,$value) : string {
+ public function get_html($type,$option,$value,$args=null) : string {
 		$name = $option->name;
 		$label = $option->label;
 		$description = $option->description;

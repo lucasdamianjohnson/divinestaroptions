@@ -172,7 +172,7 @@ class Images extends Option
 
 	}
 
-	public function get_html($type,$option,$value) : string {
+	public function get_html($type,$option,$value,$args=null) : string {
 
 		if($type == 'singleimage') {
 			return$this->single_image_option($option,$value);

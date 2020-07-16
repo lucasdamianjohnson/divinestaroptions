@@ -70,48 +70,42 @@ public function get_value_structure($type,$args,$mode = null) : array
 
 
 
-    public function get_html($type,$option,$value) : string 
+    public function get_html($type,$option,$value,$args=null) : string 
     {
+
     	if(isset($option['mode'])) {
   			$mode = $option['mode'];
   		} else {
   			$mode = '';
   		}
 
-
-  
-        if($type == 'text') {
-  	return $this->text_option($option,$value);
+  		$return = '';
+  	
+  		switch ($type) {
+  			case 'checkbox':
+  				$return = $this->check_box_option($option,$value,$mode,$args);
+  				break;
+  			case 'number':
+  				$return = $this->number_option($option,$value,$mode,$args);
+  				break;
+  			case 'text':
+  				$return = $this->text_option($option,$value,$mode,$args);
+  				break;
+  			case 'selectdropdown':
+  				$return = $this->select_dropdown_option($option,$value,$mode,$args);
+  				break;
+  			default:
+  				$return = $this->return_form_error('No known option type or mode for option type DragAndDrop.');
+  				break;
   		}
 
-  	if($type == 'number') {
 
-
-  	return $this->number_option($option,$value);
-
-
-
-  		}
-
-  	if($type == 'checkbox') {
-  	return $this->check_box_option($option,$value);
-  		}
-
-  	if($type == 'selectdropdown') {
-
-  	return $this->select_dropdown_option($option,$value,$mode);
-  		}
-
-  	if($type == 'generic') { return '';}
-
-  	throw new Exception('No known simple type.');
-
-
+  		return $return;
     }
 
 
 
-    private function search_dropdown($option,$value) {
+    private function search_dropdown($option,$value,$mode,$args=null) {
     	$label = $option->label;
 		$name = (string) $option->name;
 		$description = $option->description;
@@ -119,10 +113,19 @@ public function get_value_structure($type,$args,$mode = null) : array
 		$did = $option->name . '-description';
 
 
+		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		
+		$group_name = $args['groupname'];
+		$form_name = "divinestaroptions[optiongroup][$group_name][selectdropdown][$name]";
+
+		} else {
 		$form_name = "divinestaroptions[selectdropdown][$name]";
+	    }
+
+
 
 	    $wrap_tags = "tabindex='0' onclick='clieckedDropDownSearchOption(event,\"$form_name\",defaultCallBack)' class='ds-dropdown-search-item'";
-		$form_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$option);
+		$form_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$option->so);
 
 
 
@@ -131,7 +134,7 @@ public function get_value_structure($type,$args,$mode = null) : array
 <div class='flex-row'>
 
 <div class="flex-col flex-center">
-<p class='ds-form-label'>Font Fanily</p>
+<p class='ds-form-label'>{$label}</p>
 </div>
 
 <div class="flex-col flex-center">
@@ -172,14 +175,23 @@ HTML;
 
 		return $this->get_form_wrap($html,$label,true,$id);
     }
-  	private function select_dropdown_option($option,$value,$mode) {
+  	private function select_dropdown_option($option,$value,$mode,$args=null) {
 		$name = $option->name;
 		$title = $option->title;
 		$label = $option->label;
 		$description = $option->description;
         
+		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		
+		$group_name = $args['groupname'];
+		$form_name = "divinestaroptions[optiongroup][$group_name][selectdropdown][$name]";
+
+		} else {
+		$form_name = "divinestaroptions[selectdropdown][$name]";
+	    }
+
 		if($mode == "searchable") {
-			return $this->search_dropdown($option,$value);
+			return $this->search_dropdown($option,$value,$mode,$args);
 		}
 
 
@@ -193,7 +205,7 @@ HTML;
 		}
 
 
-		$o_html = $this->wrap_elemnts(['option','optgroup'],'',$option,false,$value);
+		$o_html = $this->wrap_elemnts(['option','optgroup'],'',$option->so,$value);
 
 
 		return <<<HTML
@@ -201,7 +213,7 @@ HTML;
 <th scope="row"><label for="{$name}-id">$label</label></th>
 <td>
 
-<select id="{$name}-id" name="divinestaroptions[selectdropdown][{$name}]"  value="{$value}" {$dad}>
+<select id="{$name}-id" name="{$form_name}"  value="{$value}" {$dad}>
 $o_html 
 </select>
 $ds
@@ -215,24 +227,31 @@ HTML;
 
   	}
 
-	private function number_option($option,$value) {
+	private function number_option($option,$value,$mode,$args=null) {
 		$name = $option->name;
 		if(!is_numeric($value)) {
 			//throw new Exception("The value provided is not numeric for the option $name.");
 			//return '';
 		}
-
-
-		
 		$label = $option->label;
 		$description = $option->description;
-		$id = $option->value . '-id';
+		$id = $option->name . '-id';
 		$did = $option->name . '-description';
+
+		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		
+		$group_name = $args['groupname'];
+		$form_name = "divinestaroptions[optiongroup][$group_name][number][$name]";
+
+		} else {
+		$form_name = "divinestaroptions[number][$name]";
+	    }
+
 		return <<<HTML
 
 		<tr>
 		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="divinestaroptions[number][{$name}]" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+		<td><input name="{$form_name}" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
 		<p class="description" id="{$did}">$description</p></td>
 		</tr>
 HTML;
@@ -244,12 +263,24 @@ HTML;
 
 
 
-	private function check_box_option($option,$value) {
+	private function check_box_option($option,$value,$mode,$args=null) {
 		$name = $option->name;
 		$title = $option->title;
 		$label = $option->label;
 		$description = $option->description;
         
+
+		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		
+		$group_name = $args['groupname'];
+		$form_name = "divinestaroptions[optiongroup][$group_name][checkbox][$name]";
+
+		} else {
+		$form_name = "divinestaroptions[checkbox][$name]";
+	    }
+	    //divinestaroptions[optiongroup][optiongroup1][checkbox][checkboxtest1]
+	    //divinestaroptions[optiongroup][optiongroup1][text][test1]
+
         $did = '';$ds = '';$dad = '';
 		if($description != '') {
 		$did = $option->name . '-description';
@@ -269,7 +300,7 @@ HTML;
 		<tr>
 		<th scope="row">$title</th>
 		<td> <fieldset><legend class="screen-reader-text"><span>$title</span></legend><label for="{$name}-id">
-		<input name="divinestaroptions[checkbox][{$name}]" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
+		<input name="{$form_name}" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
 		</fieldset>
 		$ds
 		</td>
@@ -277,19 +308,31 @@ HTML;
 HTML;
 	}
 
-	private function text_option($option,$value) {
+	private function text_option($option,$value,$mode,$args=null) {
 		$name = $option->name;
 		$label = $option->label;
 		$description = $option->description;
 		$id = $option->name . '-id';
 		$did = $option->name . '-description';
+
+	
+		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		
+		$group_name = $args['groupname'];
+		$form_name = "divinestaroptions[optiongroup][$group_name][text][$name]";
+
+		} else {
+		$form_name = "divinestaroptions[text][$name]";
+	    }
+
+
 		return <<<HTML
 <tr>
 <th scope="row">
 <label for="{$id}">$label</label>
 </th>
 <td>
-<input name="divinestaroptions[text][{$name}]" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+<input name="{$form_name}" type="text" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
 <p class="description" id="{$did}">$description</p>
 </td>
 </tr>

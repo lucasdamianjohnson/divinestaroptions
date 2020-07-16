@@ -17,8 +17,10 @@ final class Options extends Option
 
 private $option_types;
 
+    
 
-	   public function __construct() {
+
+	   public function __construct($enable_option_groups = true) {
       $types = array(
       'SimpleTypes',
       'TextStyles',
@@ -27,6 +29,9 @@ private $option_types;
       'Generic',
       'DragAndDrop'
       );
+      if($enable_option_groups) {
+        $types[] = 'OptionGroups';
+      }
 
       foreach ($types as $value) {
          if(class_exists($value)) {
@@ -39,6 +44,11 @@ private $option_types;
 
 
 	   }
+
+   public function get_option_types() {
+
+    return $this->option_types;
+   }
 
 
    public function generate_save_data_structure($type,$save_data,$mode=null) : array
@@ -122,13 +132,13 @@ private $option_types;
 
 
 
-	  public function get_html($type,$option,$value) : string{
+	  public function get_html($type,$option,$value,$args=null) : string{
   	  $type = (string) $option['type'];
 
 
   	  foreach ($this->option_types as $key => $optype) {
   	  	 if($optype->is_type($type)) {
-    	return $optype->get_html($type,$option,$value);
+    	return $optype->get_html($type,$option,$value,$args);
       }
   	  }
 

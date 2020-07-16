@@ -41,14 +41,24 @@ private $options;
 
 			foreach($section->option as $option){
 		
-				$json["$option->name"] = $this->options->load_from_xml($option);
+				if(isset($option['name'])) {
+					$name = (string) $option['name'];
+				} else {
+					$name = (string) $option->name;
+				}
+				$json[$name] = $this->options->load_from_xml($option);
 
 			}
 			foreach($section->subsection as $ssection){
 
 				foreach($ssection->option as $soption){
 
-					$json["$soption->name"] = $this->options->load_from_xml($option);
+					if(isset($option['name'])) {
+						$name = (string) $option['name'];
+					} else {
+						$name = (string) $option->name;
+					}
+					$json[$name] = $this->options->load_from_xml($soption);
 
 				}
 
@@ -197,6 +207,7 @@ return array(
       wp_enqueue_media();
       wp_enqueue_script('dsoption_form_functions',plugins_url('assets/js/functions.js',__FILE__) );
       wp_enqueue_script('dsoption_form_js',plugins_url('assets/js/form.js',__FILE__) );
+      wp_enqueue_script('dsoption_formdnd_js',plugins_url('assets/js/formdnd.js',__FILE__) );
       wp_enqueue_script('ds_options_sortable_js',plugins_url('assets/js/sortable/Sortable.min.js',__FILE__) );
       }
      // wp_enqueue_script('dsoption_form_functions',OPTIONS_PATH.'assets/js/functions.js' );
@@ -220,8 +231,12 @@ return array(
   		return $this->custom_function_option($option);
   	}
 
-
-  	$value = $this->dso->get_option((string)$option->name);
+	if(isset($option['name'])){
+	$oname = (string) $option['name'];
+	} else {
+	$oname = (string) $option->name;
+	}
+  	$value = $this->dso->get_option((string)$oname);
     return $this->options->get_html($type,$option,$value);
 
    /*
@@ -344,6 +359,7 @@ HTML;
 							$form_html .= $this->get_option_html($soption);
 					
 					}
+		
 					$form_html .= $this->option_form_end($name);	
 				}
 				$sshtml .= <<<HTML
@@ -624,9 +640,19 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 .flex-center {
 	align-items: center;
 }
+.flex-space {
+	flex: 0 0 100%;
+	margin-right: 50px;
+}
 .flex-row {
 	display: inline-flex;
 	flex-wrap: nowrap;
+}
+.ds-options-w100 {
+	width: 100%;
+}
+.ds-options-text-center {
+	text-align: center;
 }
 
 .flex-col {
@@ -758,6 +784,36 @@ span.ds-options-form-error {
 
 
 /*********************************************/
+/*Form Icons*/
+span.ds-form-icon-close-mini {
+    padding: 5px;
+    position: absolute;
+    margin-top: -5px;
+    margin-left: -5px;
+    background-image: url('{$url}assets/images/formicons/close_mini.svg');
+    background-repeat: no-repeat;
+    background-size: 10px 10px;
+}
+span.ds-form-icon-arrow-down {
+	background-image: url('{$url}assets/images/formicons/arrow_down.svg');
+    padding: 15px;
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    position: absolute;
+    margin-top: -7px;
+    margin-left: -10px;
+
+}
+span.ds-form-icon-arrow-up {
+  background-image: url('{$url}assets/images/formicons/arrow_up.svg');
+  padding: 15px;
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
+  position: absolute;
+  margin-top: -7px;
+  margin-left: -10px;
+}
+/*********************************************/
 /*Drop Down Search CSS*/
 .ds-options-dropdownsearch-currentselected {
   color: black;
@@ -768,8 +824,9 @@ span.ds-options-form-error {
   cursor: pointer;
 }
 .ds-options-dropdownsearch-currentselected span{
-	padding: 15px;
-
+	padding: 0px;
+  position: absolute;
+  margin-top: -20px;
 }
 .ds-options-dropdownsearch-clearselect {
   width: 15px;
@@ -779,57 +836,59 @@ span.ds-options-form-error {
  cursor: pointer;
 }
 .ds-options-dropdownsearch-clearselect span.ds-close-image {
-    padding: 2px 15px 14px 2px;
-
-    box-sizing: border-box;
-    background-image: url({$url}assets/images/formicons/close_mini.svg);
-   background-position: 0px 6px;
+    padding: 5px;
+    position: absolute;
+    margin-top: 5px;
+    margin-left: -5px;
+    background-image: url('{$url}assets/images/formicons/close_mini.svg');
     background-repeat: no-repeat;
     background-size: 10px 10px;
 }
 
 
 .ds-options-dropdownsearch-dropdownbutton {
-    padding: 4px;
+    padding: 0px;
 	border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-	height: 17px;
-	width: 19px;
-	
+	height: 25px;
+	width: 24px;
+	margin-left: 0px;
 	background-image: linear-gradient( #0071a1, #ccefff);
 }
 .ds-options-dropdownsearch-dropdownbutton span.ds-arrowdown-image.ds-image-rotate {
-	background-image: url({$url}assets/images/formicons/arrow_up.svg);
-	transform: rotate(180deg);
+	background-image: url('{$url}assets/images/formicons/arrow_up.svg');
 	border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 0px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 3px;
 }
 .ds-options-dropdownsearch-dropdownbutton:hover {
 	background-color:  #016087;
 	cursor: pointer;
 }
 .ds-options-dropdownsearch-dropdownbutton span.ds-arrowdown-image {
-	padding: 2px 15px 14px 0px;
-    margin-top: 5px;
-    box-sizing: border-box;
-	background-image: url({$url}assets/images/formicons/arrow_down.svg);
-	background-position: 0px 4px;
+	background-image: url('{$url}assets/images/formicons/arrow_down.svg');
+    padding: 15px;
     background-repeat: no-repeat;
     background-size: 15px 15px;
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 3px;
 
 }
 .ds-options-dropdownsearch-searchinput {
-  box-sizing: border-box;
   background-image: url('{$url}assets/images/formicons/search.svg');
   background-position: 170px 5px;
   background-repeat: no-repeat;
   background-size: 20px 20px;
   font-size: 14px;
-  padding: 14px 20px 12px 45px;
+  padding: 14px 20px 12px 5px;
   border: none;
   width: 198px;
+  height: 30px;
   border-bottom: 1px solid #ddd;
 }
 
@@ -838,18 +897,20 @@ span.ds-options-form-error {
 {outline: 3px solid #ddd;}
 */
 .dropdown {
-  width: 200px;
+  width: 198px;
   height: 25px;
   border-radius: 5px;
   border: 1px solid grey;
-  position: relative;
-  display: inline-block;
+  
+  display: inline-flex;
+  flex-wrap: nowrap;
 }
 .dropdown:hover, .dropdown:focus {
   background-color: #e6e6e6;
 
 }
 .dropdown-content {
+  text-align: left !important;
   border-left: 1px solid grey;
   border-right: 1px solid grey;
   border-bottom: 1px solid grey;
@@ -881,7 +942,12 @@ span.ds-options-form-error {
 	overflow-y: scroll;
 }
 .ds-dropdown-items div {
-	display: inline-block;
+	display: inline-flex;
+  flex-wrap: nowrap;
+}
+.ds-dropdown-items div span {
+	display: inline-flex;
+  flex-wrap: nowrap;
 }
 
 .ds-options-font-display {
@@ -894,19 +960,61 @@ span.ds-options-form-error {
 }
 /*********************************************/
 /*Drag And Drop Form Elements*/
-.ds-options-sortablelist .ds-options-sortablelist-group-item {
+.ds-form-sortablelist-button-container {
+	float: right;
+	clear: right;
+	display: inline-block;
+}
+button.ds-form-remove-sortablelist-item-button {
+	height: 20px;
+	border: none;
+	background-color: inherit;
+}
+
+button.ds-form-expand-sortablelist-item-button {
+	height: 20px;
+	border: none;
+	width: 30px;
+	background-color: inherit;
+}
+
+.ds-options-dnd-list .ds-options-sortablelist-group-item {
   border-radius: 0;
   cursor: move;
   margin-bottom: 2px;
-  border: 2px solid grey;
   padding: 5px;
+  min-height: 20px;
 }
 .ds-options-sortablelist-ghost {
   border: 2px solid #0071a1;
   background-color: #e6e6e6;
 }
-.ds-options-sortablelist .list-group-item:hover {
+.ds-options-dnd-list .list-group-item:hover {
   background-color: #f7f7f7;
+}
+
+
+.ds-options-list-top-content {
+    border: 2px solid black;
+    width: 100%;
+    background-color: grey;
+    color: white;
+    min-height: 20px;
+    padding: 5px;
+}
+.ds-options-list-bottom-content {
+	border: 2px solid black;
+    width: 100%;
+    background-color: #b69f9f;
+    min-height: 50px;
+    padding: 5px;	
+
+}
+.ds-options-list-bottom-content.ds-options-list-item-contracted {
+	display: none;
+}
+.ds-options-list-bottom-content.ds-options-list-item-expanded {
+	display: block;
 }
 /*********************************************/
 

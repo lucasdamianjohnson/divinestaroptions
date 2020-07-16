@@ -72,21 +72,26 @@ function defaultCallBack(value,form) {
   return true;
 }
 
-function updateDragAndDropValue(name) {
-    var ul = document.getElementById(name+"-sortablelist");
-    var li = ul.getElementsByTagName('li');
 
-    var namevalue = new Array();
-   for (i = 0; i < li.length; i++) {
 
-      namevalue.push(li[i].getAttribute('data-value'));
-   }
-   namevalue.join(",");
-   document.getElementById(name).value = namevalue;
-}
+
+
+
+
+
+
 
 docReady(function() {
 //ds-options-sortablelist
+
+
+   document.addEventListener('click',function(e){
+    if(e.target && e.target.id == 'testclose'){
+          console.log('the button was clicked!');
+     }
+ });
+
+
 
 
    document.querySelectorAll('.ds-options-sortablelist').forEach(item => {
@@ -94,11 +99,11 @@ docReady(function() {
       new Sortable(item, {
       animation: 150,
       ghostClass: 'ds-options-sortablelist-ghost',
-    onEnd: function (/**Event*/evt) {
+    onEnd: function (evt) {
     var itemEl = evt.item;  // dragged HTMLElement
     var name = itemEl.getAttribute('data-name');
 
-    updateDragAndDropValue(name);
+    updateDragAndDropValue(name,name+"-sortablelist");
 
   },
 
@@ -106,6 +111,68 @@ docReady(function() {
 
    });
 
+
+
+
+    document.querySelectorAll('.ds-options-doublesortablelist').forEach(item => {
+
+    var data_for = item.getAttribute('data-for');
+    var right_list = document.getElementById(data_for+"-doublesortablelist-right");
+    var left_tags = getDnDListAttributes(item);
+    var right_tags = getDnDListAttributes(right_list);
+
+    var left_pull = false;
+    var right_pull = false;
+
+
+
+    var left_data = getSortableFunctions(left_tags,right_tags);
+    var right_data = getSortableFunctions(right_tags,left_tags);
+
+
+    console.log(left_pull);
+    /*Left List*/
+    new Sortable(item, {
+    group: {
+    name: data_for,
+    pull: left_data['pull'],
+    put: left_data['put'],
+    },
+    animation: 150,
+    ghostClass: 'ds-options-sortablelist-ghost',
+    multiDrag: left_data['multidrag'],
+    selectedClass: 'selected', // The class applied to the selected items
+    fallbackTolerance: 3, // So that we can select items on mobile
+    swap: left_data['swap'],
+    sort: left_data['sort'],
+    onAdd: left_data['onAdd'],
+    onEnd: left_data['onEnd'],
+    onClone: left_data['onClone']
+    });
+
+    /*Right List*/
+    new Sortable(right_list, {
+    group: data_for,
+    pull: right_data['pull'],
+    put: right_data['put'],
+    animation: 150,
+    ghostClass: 'ds-options-sortablelist-ghost',
+    multiDrag: right_data['multidrag'],
+    selectedClass: 'selected', // The class applied to the selected items
+    fallbackTolerance: 3, // So that we can select items on mobile
+    swap: right_data['swap'],
+    sort: right_data['sort'],
+    put: right_data['put'],
+    onAdd: right_data['onAdd'],
+    onEnd: right_data['onEnd'],
+    onClone: right_data['onClone']
+    });
+
+
+
+
+
+   });
 
 
 
@@ -361,8 +428,13 @@ function update_image(imgid,for_img){
       var going_to = $(this).attr('data-going-to');
       var formData = new FormData(document.querySelector('form.ds-options-menu-form'));
 
+      document.querySelectorAll('input[type=checkbox]').forEach(item => {
+          if(!item.checked) {
+            formData.append(item.name, "false");
+          }
+      });
 
-      /*
+        /*
       console.log(formData.entries());
       $(this).find('input[type="checkbox"]').each(function(){
             if( !$(this).is(":checked")) {

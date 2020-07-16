@@ -47,7 +47,7 @@ class Generic extends Option
 				); 
 	}
 
-	public function get_html($type,$option,$value) : string {
+	public function get_html($type,$option,$value,$args=null) : string {
 		return '';
 	}
 
