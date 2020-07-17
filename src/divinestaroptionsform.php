@@ -23,12 +23,23 @@ private $options;
     function __construct() {
     	$this->dsocf = new DivineStarOptionsCustomFunctions;
     	$this->options = new Options;	
+    
+
     	if(function_exists('add_action')) {
         add_action( 'wp_ajax_divine_star_update_image_form', array( $this,'update_image_upload') );
         add_action( 'wp_ajax_divine_star_updateoptions', array( $this,'update_options') );
    		}
     }
 
+
+    function initialize($dso) {
+    	$helper = new OptionHelper();
+	    $helper->set_options($this->options);
+	    $helper->set_dso($dso);
+	    $this->options->set_helper($helper);
+	    $this->options->set_group_options($this->options);
+		$this->dso = $dso;
+	}
 
 
 
@@ -215,9 +226,7 @@ return array(
     }
 
 
-	function set_options($dso) {
-		$this->dso = $dso;
-	}
+
 
 	private function load_options_xml($going_to) {
 
@@ -641,8 +650,8 @@ button.ds-section-menu-option-button div.ds-section-menu-option-text {
 	align-items: center;
 }
 .flex-space {
-	flex: 0 0 100%;
-	margin-right: 50px;
+
+	margin-right: 20px;
 }
 .flex-row {
 	display: inline-flex;
@@ -977,8 +986,11 @@ button.ds-form-expand-sortablelist-item-button {
 	width: 30px;
 	background-color: inherit;
 }
+ul.ds-options-dnd-list {
+	width: 200px;
+}
 
-.ds-options-dnd-list .ds-options-sortablelist-group-item {
+ul.ds-options-dnd-list .ds-options-sortablelist-group-item {
   border-radius: 0;
   cursor: move;
   margin-bottom: 2px;
@@ -1010,6 +1022,10 @@ button.ds-form-expand-sortablelist-item-button {
     padding: 5px;	
 
 }
+.ds-options-list-bottom-content input {
+  width: 180px;
+}
+
 .ds-options-list-bottom-content.ds-options-list-item-contracted {
 	display: none;
 }

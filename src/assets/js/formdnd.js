@@ -1,23 +1,37 @@
-function updateDragAndDropValue(name,id) {
+function updateDragAndDropValue(name,id,content) {
     var ul = document.getElementById(id);
     var li = ul.getElementsByTagName('li');
 
     var namevalue = new Array();
+    if(content){
+      var contentids = new Array();
+    }
    for (i = 0; i < li.length; i++) {
 
       namevalue.push(li[i].getAttribute('data-value'));
+
+
+      if(content){
+      contentids.push(li[i].getAttribute('data-cid'));
+    }
+
    }
    namevalue.join(",");
-   console.log(namevalue);
+  
    document.getElementById(name).value = namevalue;
+  if(content){
+    contentids.join(",");
+   
+   document.getElementById(name+'-cid').value = contentids;
+    }
 }
 
 
 function closeListElement(for_id,id) {
   event.preventDefault();
-  console.log(for_id,id);
+
   var elm = document.getElementById(for_id);
-  console.log(elm);
+
   var children = elm.children;
   for(var i = 0; i < children.length; i++) {
     if(children[i].getAttribute('data-id') == id) {
@@ -25,6 +39,15 @@ function closeListElement(for_id,id) {
       break;
     }
   }
+  var form_input = elm.getAttribute('data-for');
+
+  var flags = getDnDListAttributes(elm);
+  if(flags['data-list-align'] != false ) {
+    form_input += '-' + flags['data-list-align'];
+  }
+
+
+ updateSortableList(for_id);
 
 }
 
@@ -34,13 +57,12 @@ function expandListItem(for_id,id) {
   event.preventDefault();
   var button = event.target;
   var icon = button.getElementsByTagName("span")[0];
-  console.log(typeof icon);
   if(typeof icon !== 'undefined') {
     var icon = button.getElementsByTagName("span")[0];
   } else {
     var icon = button;
   }
-  console.log(icon);
+
   var elm = document.getElementById(for_id);
 
   var children = elm.children;
@@ -79,8 +101,10 @@ function getDnDListAttributes(element) {
 
 var tags = [
     'data-for',
+    'data-content',
     'data-remove',
     'data-expand',
+    'data-dynamic-input',
     'data-swap',
     'data-multidrag',
     'data-put',
@@ -103,10 +127,12 @@ tags.forEach(function(item,index){
 
 return return_tags;
 }
-
+function insertBefore(newNode, existingNode) {
+    existingNode.parentNode.insertBefore(newNode, existingNode);
+}
 
 function updateSortableList(id) {
-  console.log('updating!!!!!!!!!!!!!!!');
+
   var elm = document.getElementById(id);
   var flags = getDnDListAttributes(elm);
   var children = elm.children;
@@ -121,35 +147,113 @@ function updateSortableList(id) {
     did.value = i;
     child.setAttributeNode(did);
     }
-   
+    
+
+
+
+
     var newhtml = getSortableIncludeHTML(i,flags);
 
     var divs = child.children;
     var content = '';
     for(var k = 0; k < divs.length; k++) {
-      console.log(divs[k]);
-      if(hasClass(divs[k],'ds-options-list-bottom-content')){
-        content = divs[k].outerHTML;
-        console.log(content);
-        console.log('has class!');
+    if(hasClass(divs[k],'ds-options-list-top-content')){
+      updateSortableTopListItemContent(divs[k],i,id,flags);
+    }
+    if(hasClass(divs[k],'ds-options-list-bottom-content')){
+
+     updateSortableListBottmContent(divs[k],i,flags);
       }
     }
-    var text = child.getAttribute('data-text');
-    child.innerHTML = '';
-    var html = `
-      <div class='ds-options-list-top-content'>
-        ${text} ${newhtml}
-        </div>
-        ${content}
-    `;
-    child.innerHTML = html;
+
+ 
+
+  }
+
+  var flags = getDnDListAttributes(elm);
+  if(flags['data-input']){
+  var form_input = elm.getAttribute('data-for');
+  if(flags['data-list-align'] != false ) {
+    form_input += '-' + flags['data-list-align'];
+  }
+  updateDragAndDropValue(form_input,id,flags['data-content']);
+  }
+
+}
+
+function  updateSortableTopListItemContent(divs,num,id,flags) {
+children = divs.getElementsByTagName('button');
+var hasclosebtn = false;
+    for(var k = 0; k < children.length; k++) {
+      button = children[k];
+      if(hasClass(button,'ds-form-expand-sortablelist-item-button')){
+      button.setAttribute("onclick", `expandListItem('${id}','${num}')`);
+      }
+      if(hasClass(button,'ds-form-remove-sortablelist-item-button')){
+      button.setAttribute("onclick", `closeListElement('${id}','${num}')`);
+      hasclosebtn = true;
+      }
+
+    }
 
 
+    if(flags['data-remove']) {
+      if(!hasclosebtn){
+        getSortableIncludeHTML(id,flags);
+        div = divs.children;
+        for (var i = 0; i < div.length; i++) {
+             child = div[i];
+            if(hasClass(child,'ds-form-sortablelist-button-container')) {
+              //var oldhtml = child.innerHTML;
+              child.innerHTML = '';
+              //flags['data-expand'] = false;
+              var newhtml = getSortableIncludeHTML(num,flags);
+              child.innerHTML  = newhtml;
+            }
+        }
+
+
+      }
+
+
+    }
+
+}
+
+function updateSortableListBottmContent(div,num,flags) {
+
+  if(flags['data-dynamic-input']) {
+    children = div.getElementsByTagName('input');
+    for(var k = 0; k < children.length; k++) {
+      input = children[k];
+
+      
+   
+      var group = input.getAttribute('data-group');
+      var type = input.getAttribute('data-option-type');
+      var dname = input.getAttribute('data-name');
+      var form = input.getAttribute('data-for');
+      var name = `${form}[optiongroup][${num}][${group}][${type}][${dname}]`;
+      var value = input.value;
+      input.name = name;
+      input.id = name + "-id";
+  
+      input.removeAttribute('disabled');
+
+
+      
+    }
 
 
   }
 
+
+
+  return div.outerHTML;
 }
+
+
+
 function getSortableIncludeHTML(id,flags) {
 var for_id = flags['data-for'];
 var list_align = flags['data-list-align'];
@@ -205,7 +309,7 @@ var data = {
 
     
     var onAdd = function(evt) {
-        console.log('ADD');
+
         var origEl = evt.item;
         var name = origEl.getAttribute('data-name');
 
@@ -215,7 +319,7 @@ var data = {
         name_add = "-" + tags['data-list-align'];
         id_add = "-doublesortablelist-" + tags['data-list-align'];
         } 
-        console.log(name+id_add);
+
         updateSortableList(name+id_add);
     }
 
@@ -223,7 +327,7 @@ var data = {
 
     var onClone = function(evt) {
 
-
+       
 
         var origEl = evt.item;
         var cloneEl = evt.clone;
@@ -232,11 +336,13 @@ var data = {
         var id_add = "-sortablelist";
         var name_add = "";
         if(tags['data-list-align'] != false) {
-        name_add = "-" + twin_tags['data-list-align'];
-        id_add = "-doublesortablelist-" + twin_tags['data-list-align'];
+        name_add = "-" + tags['data-list-align'];
+        id_add = "-doublesortablelist-" + tags['data-list-align'];
         } 
         //updateSortableList(name+id_add);
-        //updateDragAndDropValue(name+name_add,name+id_add);
+
+        updateSortableList(name+id_add);
+        //updateDragAndDropValue(name+name_add,name+id_add,twin_tags['data-content']);
         return true;
     }
 
@@ -265,7 +371,7 @@ var data = {
     if(tags['data-put'] != false) {
 
       var put = function (to) {
-        console.log("put");
+
         var return_this = tags['data-put'];
        return return_this;
     }
@@ -284,7 +390,7 @@ var data = {
         var itemEl = evt.item;  // dragged HTMLElement
         var name = itemEl.getAttribute('data-name');
         updateSortableList(name+id_add);
-        updateDragAndDropValue(name+name_add,name+id_add);
+        updateDragAndDropValue(name+name_add,name+id_add,tags['data-content']);
       }
       data['onEnd'] = onEnd;
     }

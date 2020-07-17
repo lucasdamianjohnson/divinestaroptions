@@ -1,8 +1,8 @@
 <?php
 /**
-* Set class structure for option types.
+* Set class structure for option groups.
 *
-* This is a temple class for the option types. 
+* This handles option groups. 
 * 
 * @category   Options
 * @package    DivineStarOptions
@@ -14,28 +14,42 @@
 class OptionGroups extends Option
 {
 
-	private $options;
 
-	public function __construct() {
 
-		$this->options = new Options(false);
+	public function set_options($options) {
+		//$this->options = $options;
 	}
+		
+	private $helper;
+	public function set_helper($helper) {
+		$this->helper = $helper;
+	}
+
+
 
 	public function generate_save_data_structure($type,$save_data,$mode=null) : array
 	{
-	
-	
-  	  $values = array();
-  	  foreach($save_data as $type => $data) {
+		
+
+
+
+  	  foreach($save_data as $ntype => $data) {
  		   foreach ($data as $key => $value) {
 
- 		   	$saved_data = $this->options->generate_save_data_structure($type,$value)[0];
+ 	
 
- 		   	 $values[$key]  = $this->options->get_data_strcutre($type,$saved_data,$mode);
+ 		   	$saved_data = $this->helper->get_options()
+ 		   	->generate_save_data_structure($ntype,$value)[0];
+
+ 		   	 $values[$key]  = $this->helper->get_options()->
+ 		   	 get_data_strcutre($ntype,$saved_data,$mode);
  		   }
 
 	
 	} 
+
+
+	
 		$return = array($this->get_value_structure($type,$values,$mode))[0];
 
 		return $return;
@@ -56,7 +70,7 @@ class OptionGroups extends Option
   	  	  } else {
   	  	  $oname = (string) $op->name;
   	  	  }
-    	  $values[$oname]  = $this->options->load_from_xml($op);
+    	  $values[$oname]  = $this->helper->get_options()->load_from_xml($op);
 	
 	}  
 
@@ -82,12 +96,18 @@ class OptionGroups extends Option
 
  public function get_html($type,$option,$value,$args=null) : string {
 
+
+
  	  $groupname = (string) $option['name'];
  	  $groupmode = (string) $option['mode'];
- 	  $args = [
- 	  	'optiongroup' => true,
- 	  	'groupname' => $groupname
- 	  ];
+ 	  
+ 	  if($args == null) {
+ 	  	$args = array();
+ 	  }
+ 	  $args['optiongroup'] = true;
+ 	  $args['groupname'] = $groupname;
+
+ 	  
 
 
   	  $return_html  = '';
@@ -99,9 +119,12 @@ class OptionGroups extends Option
   	  	  } else {
   	  	  $oname = (string) $op->name;
   	  	  }
+  	  	  if(isset($value[$oname]['value'])){
   	  	  $ovalue = $value[$oname]['value'];
+  	  	  }else{$ovalue = '';}
 
-    	  $return_html  .= $this->options->get_html($otype,$op,$ovalue,$args);
+    	  $return_html  .=  $this->helper->get_options()
+ 		   	->get_html($otype,$op,$ovalue,$args);
 	
 	}  
 

@@ -101,8 +101,10 @@ Divine Star Options
 	    <option 
 	    	type="doublesortablelist" 
 	    	mode="" 
+	    	left-content="true" right-content="true"
 	    	left-remove="false" right-remove="true"
 	    	left-expand="true" right-expand="true"
+	    	left-dynamic-input="false" right-dynamic-input="true"
 	    	left-swap="false" right-swap="true" 
 	    	left-multidrag="false" right-multidrag="true" 
 	    	left-put="false" right-put="true"
@@ -146,15 +148,37 @@ Divine Star Options
 					</o>
 			</so>
 			<socontent>
-				<content cid='1' type='html'>
-				<![CDATA[
-				<label>Label for text:
-				<input type='text' value='blah' placeholder='blah'/></label>
-				<p>This is the text for optin 1.</p> 
-				]]>
+				<content cid='1' type='option'>
+					<option type="optiongroup" name="nestedgroup1">
+						<option type="text" mode="">
+							<label>Text Option 1</label>
+							<name>textinsidecontent1</name>
+							<value>#1a1a1a</value>
+							<description> This is the first test option. </description>
+						</option> 
+						<option type="text" mode="">
+							<label>Text Option 2</label>
+							<name>textinsidecontent2</name>
+							<value>#1a1a1a</value>
+							<description> This is the second test option. </description>
+						</option> 
+						<option type="text" mode="">
+							<label>Text Option 3</label>
+							<name>textinsidecontent3</name>
+							<value>#1a1a1a</value>
+							<description> This is the third test option. </description>
+						</option> 
+					</option>
 				</content>
-				<content cid='2' type='html'>
-				<![CDATA[<p>This is the text for optin 2.</p> ]]>
+				<content cid='2' type='option'>
+					<option type="optiongroup" name="nestedgroup2">
+						<option type="text" mode="">
+							<label>Text Option 2</label>
+							<name>textinsidecontent1</name>
+							<value>#1a1a1a</value>
+							<description> This is the first test option. </description>
+						</option> 
+					</option>
 				</content>
 				<content cid='3' type='html'>
 				<![CDATA[<p>This is the text for optin 3.</p> ]]>
@@ -179,9 +203,9 @@ Divine Star Options
 				</content>
 			</socontent>
 			<default>
-					<o value='option1'>Option 1</o>
-					<o value='option2'>Option 2</o>
-					<o value='option3'>Option 3</o>
+					<o cid='1' value='option1'>Option 1</o>
+					<o cid='2' value='option2'>Option 2</o>
+					<o cid='3' value='option3'>Option 3</o>
 			</default>
 	    </option>
 	    <option type="sortablelist" mode="">

@@ -19,5 +19,14 @@ require_once('Generic.php');
 require_once('DragAndDrop.php');
 require_once('OptionGroups.php');
 require_once('Options.php');
+require_once('OptionHelper.php');
 /*Add Custom Types Below*/
 require_once('CustomOptionType.php');
+
+
+
+/*Set Up*/
+if(class_exists('OptionHelper')){
+	$helper = new OptionHelper();
+	$helper->set_options(new Options());
+}

@@ -13,13 +13,54 @@
 */
 class DragAndDrop extends Option
 {
-
+	private $helper;
+	public function set_helper($helper) {
+		$this->helper = $helper;
+	}
 
 
 	public function generate_save_data_structure($type,$save_data,$mode=null) : array
 	{
 
-	return array($this->get_value_structure($type,$save_data,$mode)[0]);
+		if($type=='doublesortablelist'){
+
+			$listorder = $save_data['listorder'];
+			$cids = $save_data['cid'];
+			$optiongroups = $save_data['optiongroup'];
+			//print_r($optiongroups);
+			$newgroups = array();
+			$newvalues = array();
+			foreach ($optiongroups as $key => $value) {
+				foreach($value as $k => $group){
+
+			$newdata = $this->helper->get_options()
+					->generate_save_data_structure('optiongroup',$group,'doublesortedlis')[0];
+			 echo "\n**************************************\n";
+			 echo "$key";
+			 echo "\n**************************************\n";
+
+			 $newgroups[$key][$k] = $this->helper->get_options()
+ 		   	 ->get_data_strcutre('optiongroup',$newdata,$mode);
+
+			}
+			//var_dump($newgroups);
+		  }
+		  echo "\n**************************************\n";
+ 		   print_r($newgroups);
+
+	  	$return = $this->get_value_structure($type,
+	  		[
+	  		$listorder,
+	  		$cids,
+	  		$newgroups
+	  		],$mode);
+	  	}
+
+	  	if($type=='sortablelist') {
+	 	$return = $this->get_value_structure($type,$save_data,$mode);
+	  	}
+
+	  	return $return;
 	}
 
 	public function load_from_xml($option) : array
@@ -38,30 +79,68 @@ class DragAndDrop extends Option
 		  $data  = $option->default->o;
 		}
 		$newvalue = array();
+		$cids = array();
 		//$newvalue = implode(",",$option->so->o);
 		foreach ($data as $key => $value) {
 			$data_value = $value['value'];
 			$newvalue[] = $data_value;
+			$cids[] = $value['cid'];
 		}
 		$newvalue = implode(",",$newvalue);
-		return $this->get_data_strcutre($type,$newvalue,$mode);
+		$cids = implode(",",$cids);
+
+		if($type=='doublesortablelist'){
+	  	$return = $this->get_data_strcutre($type,[$newvalue,$cids,['']],$mode);
+	  	}
+
+	  	if($type=='sortablelist') {
+	 	$return = $this->get_data_strcutre($type,$newvalue,$mode);
+	  	}
+
+	   return $return;
 	}
 
 
 	public function get_value_structure($type,$args,$mode = null) : array
 	{
+			if($type=='doublesortablelist'){
+	  	$return = array(
+						'listorder' => $args[0],
+						'cid' => $args[1],
+						'optiongroup' => $args[2]
+					);
+	  	}
 
-		return array($args);
+	  	if($type=='sortablelist') {
+	  		$return = $args;
+	  	}
+		return array($return);
 	}
 
 	
 	public function get_data_strcutre($type,$args,$mode = null) : array
 	{
 
-	  	return  array(
-					'value' => $args,
+
+		if($type=='doublesortablelist'){
+	  	$return = array(
+					'value' => array(
+						'listorder' => $args[0],
+						'cid' => $args[1],
+						'optiongroup' => '',
+					),
 					'type' => $type 
 				); 
+	  	}
+
+	  	if($type=='sortablelist') {
+	  		$return = array(
+	  			'value' => $args,
+	  			'type' => $type
+	  		);
+	  	}
+	  	return $return;
+
 	}
 
 
@@ -104,7 +183,13 @@ class DragAndDrop extends Option
 
 	private function double_sortable_list($option,$value,$mode = null) : string
 	{
+
+		$optiongroup = $value['optiongroup'];
 		$label = $option->label;
+
+		$cids = $value['cid'];
+		$value = $value['listorder'];
+
 		$name = (string) $option->name;
 		$description = $option->description;
 		$id = $option->value . '-id';
@@ -112,10 +197,14 @@ class DragAndDrop extends Option
 		$form_name = "divinestaroptions[doublesortablelist][$name]";
 
 		$tags = array(
+		'left-content',
+		'right-content',
 		'left-remove',
 		'right-remove',
 		'left-expand',
 		'right-expand',
+		'left-dynamic-input',
+		'right-dynamic-input',
 		'left-swap',
 		'right-swap',
 		'left-multidrag',
@@ -145,23 +234,26 @@ class DragAndDrop extends Option
 
 
 	    $left_list_tags = <<<TAGS
-data-for="{$form_name}" data-remove="{$dt['left-remove']}" data-expand="{$dt['left-expand']}" data-swap="{$dt['left-swap']}" data-multidrag="{$dt['left-multidrag']}" data-put="{$dt['left-put']}" data-pull="{$dt['left-pull']}" data-sort="{$dt['left-sort']}" data-max="{$dt['left-max']}" data-min="{$dt['left-min']}" data-input="{$dt['left-input']}" data-list-align="left"
+data-for="{$form_name}" data-content="{$dt['left-content']}" data-remove="{$dt['left-remove']}" data-expand="{$dt['left-expand']}" data-swap="{$dt['left-swap']}" data-multidrag="{$dt['left-multidrag']}" data-put="{$dt['left-put']}" data-pull="{$dt['left-pull']}" data-sort="{$dt['left-sort']}" data-max="{$dt['left-max']}" data-min="{$dt['left-min']}" data-input="{$dt['left-input']}" data-list-align="left"
+	data-dynamic-input="{$dt['left-dynamic-input']}"
 TAGS;
 	    $right_list_tags = <<<TAGS
-data-for="{$form_name}" data-remove="{$dt['right-remove']}" data-expand="{$dt['right-expand']}" data-swap="{$dt['right-swap']}" data-multidrag="{$dt['right-multidrag']}" data-put="{$dt['right-put']}" data-pull="{$dt['right-pull']}" data-sort="{$dt['right-sort']}" data-max="{$dt['right-max']}" data-min="{$dt['right-min']}" data-input="{$dt['right-input']}"
-	data-list-align="right"
+data-for="{$form_name}" data-content="{$dt['right-content']}" data-remove="{$dt['right-remove']}" data-expand="{$dt['right-expand']}" data-swap="{$dt['right-swap']}" data-multidrag="{$dt['right-multidrag']}" data-put="{$dt['right-put']}" data-pull="{$dt['right-pull']}" data-sort="{$dt['right-sort']}" data-max="{$dt['right-max']}" data-min="{$dt['right-min']}" data-input="{$dt['right-input']}" data-list-align="right"
+	data-dynamic-input="{$dt['right-dynamic-input']}"
 TAGS;
 
 		if($dt['right-input'] != 'false') {
 		$right_input = <<<HTML
-		<input type='hidden' name="{$form_name}" id="{$form_name}-right" value="{$value}"/>
+		<input type='hidden' name="{$form_name}[listorder]" id="{$form_name}-right" value="{$value}"/>
+		<input type='hidden' name="{$form_name}[cid]" id="{$form_name}-right-cid" value="{$cids}"/>
 HTML;
 		} else {
 		$right_input = "";
 		}
 		if($dt['left-input'] != 'false') {
 		$left_input = <<<HTML
-		<input type='hidden' name="{$form_name}" id="{$form_name}-left" value="{$value}"/>
+		<input type='hidden' name="{$form_name}[listorder]" id="{$form_name}-left" value="{$value}"/>
+		<input type='hidden' name="{$form_name}[cid]" id="{$form_name}-left-cid" value="{$cids}"/>
 HTML;
 		} else {
 		$left_input = "";
@@ -173,39 +265,62 @@ HTML;
 		$form_data = '';
 		$wrap_tags = "tabindex='0'   data-name='$form_name' class='ds-options-sortablelist-group-item'";
 
-		$close_icon = $this->get_form_icon('close-mini');
+		
 		$right_args = [
 			'dndlist' => true,
+			'form_name'=>"$form_name",
 			'for' => "$form_name-doublesortablelist-right",
 			'add_close' => 	true,
 			'close_class' => 'ds-options-remove-sortablelist-item',
 			'add_expand' => true,
-			'expand_class'=> 'ds-options-expand-sortablelist-item'
+			'value' => $optiongroup,
+			'expand_class'=> 'ds-options-expand-sortablelist-item',
+			'include_content' => $option->socontent,
+			'loaded_values' => true
 		];
-	
+		if($dt['right-dynamic-input'] == 'true'){
+			$right_args['dynamic-input'] = true;
+		}
+		if($dt['right-input'] == 'false'){
+			$right_args['input'] = false;
+		}
 
 		$left_args = [
 			'dndlist' => true,
+			'form_name'=>"$form_name",
 			'for' => "$form_name-doublesortablelist-left",
 			'add_expand' => true,
+			'value' => $optiongroup,
 			'expand_class'=> 'ds-options-expand-sortablelist-item',
 			'include_content' => $option->socontent
 		];
-
-	    
+		if($dt['left-dynamic-input'] == 'true'){
+			$left_args['dynamic-input'] = true;
+		}
+	    if($dt['left-input'] == 'false'){
+			$left_args['input'] = false;
+		}
 
 		if($value != '') {
-	
+
 		$data = explode(",", $value);
+		$cids = explode(",",$cids);
+		$data_send = array();
+		foreach ($data as $key => $value) {
+			$data_send[] = array(
+				'value'=> "$value",
+				'cid'=> $cids[$key] 
+			);
+		}
 		prev($data);
-		$form_data = $this->wrap_elemnts(['li','ul'],$wrap_tags,$data,'',$right_args);
+		$form_data = $this->helper->wrap_elemnts(['li','ul'],$wrap_tags,$data_send,'',$right_args);
 
 	 } else {
 
-	 	$form_data = $this->wrap_elemnts(['li','ul'],$wrap_tags,$option->default,'',$right_args);
+	 	$form_data = $this->helper->wrap_elemnts(['li','ul'],$wrap_tags,$option->default,'',$right_args);
 	 }
 
-	 	$options = $this->wrap_elemnts(['li','ul'],$wrap_tags,$option->so,'',$left_args);
+	 	$options = $this->helper->wrap_elemnts(['li','ul'],$wrap_tags,$option->so,'',$left_args);
 
 	 
 
@@ -231,7 +346,7 @@ HTML;
 HTML;
 
    
-        return $this->get_form_wrap($form_html);
+        return $this->helper->get_form_wrap($form_html);
 	}
 
 
@@ -241,6 +356,7 @@ HTML;
     private function sortable_list($option,$value,$mode = null) : string
     {
     	$label = $option->label;
+
 		$name = (string) $option->name;
 		$description = $option->description;
 		$id = $option->value . '-id';
@@ -251,15 +367,14 @@ HTML;
 		$form_data = '';
 		$wrap_tags = "tabindex='0'   data-name='$form_name' class='ds-options-sortablelist-group-item'";
 		if($value != '') {
-		
 		$data = explode(",", $value);
 		prev($data);
-		$form_data = $this->wrap_elemnts(['li','ul'],$wrap_tags,$data,true);
+		$form_data = $this->helper->wrap_elemnts(['li','ul'],$wrap_tags,$data,true);
 
 
 	 } else {
 
-	 	$form_data = $this->wrap_elemnts(['li','ul'],$wrap_tags,$option);
+	 	$form_data = $this->helper->wrap_elemnts(['li','ul'],$wrap_tags,$option);
 	 }
 
 
@@ -271,7 +386,7 @@ HTML;
 HTML;
 
    
-        return $this->get_form_wrap($form_html,$label,true,$id);
+        return $this->helper->get_form_wrap($form_html,$label,true,$id);
 }
 
 

@@ -14,6 +14,11 @@
 class Images extends Option  
 {
 
+	private $helper;
+	public function set_helper($helper) {
+		$this->helper = $helper;
+	}
+
 
 	public function generate_save_data_structure($type,$save_data,$mode=null) : array
 	{

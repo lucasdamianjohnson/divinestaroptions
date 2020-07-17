@@ -17,7 +17,16 @@ final class Options extends Option
 
 private $option_types;
 
-    
+    public function set_helper($helper) {
+        foreach ($this->option_types as $key => $optype) {
+          $optype->set_helper($helper);
+        }
+    }
+
+
+    public function set_group_options($options) {
+      $this->option_types['OptionGroups']->set_options($options);
+    }
 
 
 	   public function __construct($enable_option_groups = true) {
@@ -77,9 +86,15 @@ private $option_types;
    }
 
 
-	public function add_option_type($option_class_name) {
+	public function add_option_type($option_class_name) : void {
 
-		$this->option_types[$option_class_name] = new $option_class_name;
+    if(class_exists($option_class_name)){
+          $this->option_types[$option_class_name] = new $option_class_name;
+        } else {
+          throw new Exception("The option class does not exists.");
+        }
+
+
 	}
 
 	public function get_option($type)  {
@@ -135,7 +150,7 @@ private $option_types;
 	  public function get_html($type,$option,$value,$args=null) : string{
   	  $type = (string) $option['type'];
 
-
+   
   	  foreach ($this->option_types as $key => $optype) {
   	  	 if($optype->is_type($type)) {
     	return $optype->get_html($type,$option,$value,$args);

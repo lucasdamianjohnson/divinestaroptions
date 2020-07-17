@@ -13,10 +13,14 @@
 */
 class TextStyles extends Option
 {
-	
+	private $helper;
+	public function set_helper($helper) {
+		$this->helper = $helper;
+	}
 
 	public function generate_save_data_structure($type,$save_data,$mode=null) : array
 	{
+
 
 		return array($this->get_value_structure($type,$save_data,$mode));
 	}
@@ -101,7 +105,7 @@ class TextStyles extends Option
 		  natcasesort($font_array);
 
 		$wrap_tags = "tabindex='0' onclick='clieckedDropDownSearchOption(event,\"$form_name\",updateFontDisplay)' class='ds-dropdown-search-item'";
-		$font_data = $this->wrap_elemnts(['a','p'],$wrap_tags,$font_array);
+		$font_data = $this->helper->wrap_elemnts(['a','p'],$wrap_tags,$font_array);
 
 
 		 
@@ -154,7 +158,7 @@ class TextStyles extends Option
 </div>
 HTML;
 
-		return $this->get_form_wrap($html,$label,true,$id);
+		return $this->helper->get_form_wrap($html,$label,true,$id);
 	}
 
 

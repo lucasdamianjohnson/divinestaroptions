@@ -111,8 +111,10 @@ docReady(function() {
 
    });
 
-
-
+    document.querySelectorAll('.ds-options-doublesortablelist').forEach(item => {
+                    console.log(item.id);
+                    updateSortableList(item.id);
+   });
 
     document.querySelectorAll('.ds-options-doublesortablelist').forEach(item => {
 
