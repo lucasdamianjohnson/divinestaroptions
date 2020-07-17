@@ -178,7 +178,7 @@ HTML;
 HTML;
 	    	return $html;
 	    } else {
-	    		$this->helper->debug_message($label);
+	    	
 	    	return 	$this->helper->get_form_wrap($html,$label,true,$id);
 	    }
     }

@@ -89,10 +89,12 @@ class TextStyles extends Option
 		$label = $option->label;
 		$name = (string) $option->name;
 		$description = $option->description;
+		
 	
-		if(count($value) == 0){
+		if($value == ''){
 			$value = (string)$option->value;
 		}
+	
 
 		$form_data = $this->helper->get_from_element_data('text',$name,$args);
 		$form_name = $form_data['form_name'];
@@ -127,7 +129,7 @@ class TextStyles extends Option
 	$html = <<<HTML
 
 
-	<input type="hidden" value="" id="{$form_name}" {$extra_tags} name="{$form_name}"/>
+	<input type="hidden" value="{$value}" id="{$form_name}" {$extra_tags} name="{$form_name}"/>
 	<div tabindex="0" class="dropdown">
 	<div class='ds-dropdown-items dropbtn'>
 
@@ -173,7 +175,7 @@ HTML;
 HTML;
 	    	return $html;
 	    } else {
-	    		$this->helper->debug_message($label);
+	   
 	    	return 	$this->helper->get_form_wrap($html,$label,true,$id);
 	    }
 
