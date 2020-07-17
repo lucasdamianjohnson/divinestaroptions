@@ -89,6 +89,77 @@ HTML;
 	}
 
 
+
+
+
+
+	public function get_from_element_data($type,$name,$args=null) : array
+	{
+		$extra_tags = '';
+		$form_name = $name;
+		$id = "$name-id";
+		$did = "$name-description";
+		if(!isset($args['input']) || $args['input'] ){
+
+			if(isset($args['optiongroup']) && $args['optiongroup']) {
+			
+			$group_name = $args['groupname'];
+			$form_name = "divinestaroptions[optiongroup][$group_name][$type][$name]";
+
+			} else {
+
+			$form_name = "divinestaroptions[text][$name]";
+
+	    }
+
+
+	    if(isset($args['optiongroup']) && $args['optiongroup']) {
+    			$group_name = $args['groupname'];
+    		 	$extra_tags .= " data-group='$group_name' data-option-type='text' data-name='{$name}' ";
+    	}
+		if(isset($args['form_name']) && $args['form_name']) {
+
+				$data_form_name = $args['form_name'];
+				$extra_tags .= " data-for='$data_form_name'";
+				if(isset($args['contentindex'])) {
+				$ci = $args['contentindex'];
+				$form_name =  $data_form_name."[optiongroup][$ci][$group_name][$type][$name]";
+			
+				} else {
+				$form_name =  $data_form_name."[optiongroup][$group_name][$type][$name]";
+				}
+				$id = $form_name ."-id";	 	
+
+    	}
+
+	    } else {
+
+	    	$extra_tags .= " disabled ";
+	    	if(isset($args['optiongroup']) && $args['optiongroup']) {
+	    			$group_name = $args['groupname'];
+	    		 	$extra_tags .= " data-group='$group_name' data-option-type='$type' data-name='{$name}' ";
+	    	}
+			if(isset($args['form_name']) && $args['form_name']) {
+	    			$data_form_name = $args['form_name'];
+	    		 	$extra_tags .= " data-for='$data_form_name' ";
+	    	}
+	    }
+
+
+
+
+
+	    return array(
+	    	'id'=>$id,
+	    	'description-id'=>$did,
+	    	'form_name'=>$form_name,
+	    	'extra_tags'=>$extra_tags
+	    );
+
+	}
+
+
+
 	/**
 	* Wrap some HTML content in a HTML tag
 	*
@@ -337,7 +408,7 @@ HTML;
 	}
 
 
-	public function get_included_tags($text,$id,$cid,$args) {
+	private function get_included_tags($text,$id,$cid,$args) {
 		$return_tags = '';
 		if(isset($args['for'])) {
 			$for = $args['for'];
@@ -357,7 +428,8 @@ HTML;
 		return $return_tags;
 	}
 
-	public function get_included_html($value,$cid,$content,$id,$args) {
+
+	private function get_included_html($value,$cid,$content,$id,$args) {
 			$return_html = '';
 			$for = '';
 			if(isset($args['for'])) {

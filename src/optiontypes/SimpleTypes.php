@@ -114,18 +114,14 @@ public function get_value_structure($type,$args,$mode = null) : array
     	$label = $option->label;
 		$name = (string) $option->name;
 		$description = $option->description;
-		$id = $option->value . '-id';
-		$did = $option->name . '-description';
 
 
-		if(isset($args['optiongroup']) && $args['optiongroup']) {
-		
-		$group_name = $args['groupname'];
-		$form_name = "divinestaroptions[optiongroup][$group_name][selectdropdown][$name]";
-
-		} else {
-		$form_name = "divinestaroptions[selectdropdown][$name]";
-	    }
+		$form_data = $this->helper->get_from_element_data('text',$name,$args);
+		$form_name = $form_data['form_name'];
+		$extra_tags = $form_data['extra_tags'];
+		$id = $form_data['id'];
+		$extra_tags = $form_data['extra_tags'];
+		$did = $form_data['description-id'];
 
 
 
@@ -136,68 +132,73 @@ public function get_value_structure($type,$args,$mode = null) : array
 
 
 	$html = <<<HTML
-<div class='flex-row'>
 
-<div class="flex-col flex-center">
-<p class='ds-form-label'>{$label}</p>
-</div>
 
-<div class="flex-col flex-center">
 
-<input type="hidden" value="" id="{$form_name}" name="{$form_name}"/>
-<div tabindex="0" class="dropdown">
-<div class='ds-dropdown-items dropbtn'>
+	<input type="hidden" value="" id="{$form_name}" {$extra_tags} name="{$form_name}"/>
+	<div tabindex="0" class="dropdown">
+	<div class='ds-dropdown-items dropbtn'>
 
-	<div tabindex="0" class="ds-options-dropdownsearch-currentselected" onclick="dropDownSearchClick(event,'{$form_name}')">
-	<span id='{$form_name}-dropdownsearch-currentselected'>$value</span>
+		<div tabindex="0" class="ds-options-dropdownsearch-currentselected" onclick="dropDownSearchClick(event,'{$form_name}')">
+		<span id='{$form_name}-dropdownsearch-currentselected'>$value</span>
+		</div>
+
+		<div tabindex="0" id='{$form_name}-dropdownsearch-clearcurrentselected' class='ds-options-dropdownsearch-clearselect'>
+		<span  onclick='dropDownSearchClearSelect(event,"{$form_name}")' class="ds-close-image"></span>
+		</div>
+
+		<div tabindex="0" id='{$form_name}-dropdownsearch-dropdownbutton' class='ds-options-dropdownsearch-dropdownbutton'>
+		<span  onclick='dropDownSearchClick(event,"{$form_name}")' class="ds-arrowdown-image"></span>
+		</div>
+
 	</div>
-
-	<div tabindex="0" id='{$form_name}-dropdownsearch-clearcurrentselected' class='ds-options-dropdownsearch-clearselect'>
-	<span  onclick='dropDownSearchClearSelect(event,"{$form_name}")' class="ds-close-image"></span>
 	</div>
+	  <div id="{$form_name}-dropdownsearch-dropdown" class="dropdown-content">
+	    <input class='ds-options-dropdownsearch-searchinput' type="text" placeholder="Search.." id="{$form_name}-dropdownsearch-searchinput" onkeyup="filterFunction('{$form_name}')">
+	    <div class='search-list-container'>
+	    $form_data
+	    </div>
+	  </div>
 
-	<div tabindex="0" id='{$form_name}-dropdownsearch-dropdownbutton' class='ds-options-dropdownsearch-dropdownbutton'>
-	<span  onclick='dropDownSearchClick(event,"{$form_name}")' class="ds-arrowdown-image"></span>
-	</div>
-
-</div>
-</div>
-  <div id="{$form_name}-dropdownsearch-dropdown" class="dropdown-content">
-    <input class='ds-options-dropdownsearch-searchinput' type="text" placeholder="Search.." id="{$form_name}-dropdownsearch-searchinput" onkeyup="filterFunction('{$form_name}')">
-    <div class='search-list-container'>
-    $form_data
-    </div>
-  </div>
-<div>
-</div>
-
-</div>
-
-</div>
 
 
 HTML;
 
-		return 	$this->helper->get_form_wrap($html,$label,true,$id);
+    if(isset($args['nested']) && $args['nested']) {
+	 		$html = <<<HTML
+			<div class='flex-row'>
+				<div class="flex-col flex-center">
+					<label for="{$id}">$label</label>
+				</div>
+				<div class="flex-col flex-center">
+					$html
+				</div>    
+
+			</div>    	
+HTML;
+	    	return $html;
+	    } else {
+	    		$this->helper->debug_message($label);
+	    	return 	$this->helper->get_form_wrap($html,$label,true,$id);
+	    }
     }
   	private function select_dropdown_option($option,$value,$mode,$args=null) {
+
+		if($mode == "searchable") {
+			return $this->search_dropdown($option,$value,$mode,$args);
+		}
 		$name = $option->name;
 		$title = $option->title;
 		$label = $option->label;
 		$description = $option->description;
         
-		if(isset($args['optiongroup']) && $args['optiongroup']) {
-		
-		$group_name = $args['groupname'];
-		$form_name = "divinestaroptions[optiongroup][$group_name][selectdropdown][$name]";
+		$form_data = $this->helper->get_from_element_data('text',$name,$args);
+		$form_name = $form_data['form_name'];
+		$extra_tags = $form_data['extra_tags'];
+		$id = $form_data['id'];
+		$extra_tags = $form_data['extra_tags'];
+		$did = $form_data['description-id'];
 
-		} else {
-		$form_name = "divinestaroptions[selectdropdown][$name]";
-	    }
-
-		if($mode == "searchable") {
-			return $this->search_dropdown($option,$value,$mode,$args);
-		}
 
 
         $did = '';$ds = '';$dad = '';
@@ -213,21 +214,23 @@ HTML;
 		$o_html = $this->helper->wrap_elemnts(['option','optgroup'],'',$option->so,$value);
 
 
-		return <<<HTML
-<tr>
-<th scope="row"><label for="{$name}-id">$label</label></th>
-<td>
-
-<select id="{$name}-id" name="{$form_name}"  value="{$value}" {$dad}>
+		$html = <<<HTML
+<select id="{$id}" {$extra_tags} name="{$form_name}"  value="{$value}" {$dad}>
 $o_html 
 </select>
 $ds
-</td>
-
-</tr>
 HTML;
-
-
+	
+    if(isset($args['nested']) && $args['nested']) {
+	 		$html = <<<HTML
+	    	<label for="{$id}">$label
+	    		$html
+	    	</label>
+HTML;
+	    	return $html;
+	    } else {
+	    	return 	$this->helper->get_form_wrap($html,$label,true,$id);
+	    }
 
 
   	}
@@ -235,31 +238,40 @@ HTML;
 	private function number_option($option,$value,$mode,$args=null) {
 		$name = $option->name;
 		if(!is_numeric($value)) {
-			//throw new Exception("The value provided is not numeric for the option $name.");
-			//return '';
+	
 		}
 		$label = $option->label;
 		$description = $option->description;
-		$id = $option->name . '-id';
-		$did = $option->name . '-description';
 
-		if(isset($args['optiongroup']) && $args['optiongroup']) {
+
+		$form_data = $this->helper->get_from_element_data('text',$name,$args);
+		$form_name = $form_data['form_name'];
+		$extra_tags = $form_data['extra_tags'];
+		$id = $form_data['id'];
+		$extra_tags = $form_data['extra_tags'];
+		$did = $form_data['description-id'];
 		
-		$group_name = $args['groupname'];
-		$form_name = "divinestaroptions[optiongroup][$group_name][number][$name]";
+		$html =  <<<HTML
 
-		} else {
-		$form_name = "divinestaroptions[number][$name]";
+	<input {$extra_tags} name="{$form_name}" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
+		<p class="description" id="{$did}">$description</p></td>
+
+HTML;
+
+
+
+	    if(isset($args['nested']) && $args['nested']) {
+	 		$html = <<<HTML
+	    	<label for="{$id}">$label
+	    		$html
+	    	</label>
+HTML;
+	    	return $html;
+	    } else {
+	    	return 	$this->helper->get_form_wrap($html,$label,true,$id);
 	    }
 
-		return <<<HTML
 
-		<tr>
-		<th scope="row"><label for="{$id}">$label</label></th>
-		<td><input name="{$form_name}" type="number" id="{$id}" aria-describedby="{$did}" value="{$value}" class="regular-text">
-		<p class="description" id="{$did}">$description</p></td>
-		</tr>
-HTML;
 	}
 
 
@@ -274,19 +286,17 @@ HTML;
 		$label = $option->label;
 		$description = $option->description;
         
-
-		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		$form_data = $this->helper->get_from_element_data('text',$name,$args);
+		$form_name = $form_data['form_name'];
+		$extra_tags = $form_data['extra_tags'];
+		$id = $form_data['id'];
+		$extra_tags = $form_data['extra_tags'];
+		$did = $form_data['description-id'];
 		
-		$group_name = $args['groupname'];
-		$form_name = "divinestaroptions[optiongroup][$group_name][checkbox][$name]";
+	
 
-		} else {
-		$form_name = "divinestaroptions[checkbox][$name]";
-	    }
-	    //divinestaroptions[optiongroup][optiongroup1][checkbox][checkboxtest1]
-	    //divinestaroptions[optiongroup][optiongroup1][text][test1]
 
-        $did = '';$ds = '';$dad = '';
+        $ds = '';$dad = '';
 		if($description != '') {
 		$did = $option->name . '-description';
 		$ds = <<<HTML
@@ -299,80 +309,43 @@ HTML;
 		$checked = 'checked=""';
 		}
 
-		$id = $option->value . '-id';
-		$did = $option->name . '-description';
-		return <<<HTML
-		<tr>
-		<th scope="row">$title</th>
-		<td> <fieldset><legend class="screen-reader-text"><span>$title</span></legend><label for="{$name}-id">
-		<input name="{$form_name}" {$dad} type="checkbox" id="{$name}-id" value="1" {$checked}>$label</label>
+		
+
+		$html = <<<HTML
+
+	    <fieldset>
+	    <legend class="screen-reader-text"><span>$title</span></legend>
+	    <label for="{$id}">
+		<input {$extra_tags} name="{$form_name}" {$dad} type="checkbox" id="{$id}" value="1" {$checked}>$label</label>
 		</fieldset>
 		$ds
-		</td>
-		</tr>
+	
 HTML;
+
+
+
+	    if(isset($args['nested']) && $args['nested']) {
+	 
+	    	return $html;
+	    } else {
+	    	return 	$this->helper->get_form_wrap($html,$title,true,$id);
+	    }
+
+
 	}
 
 	private function text_option($option,$value,$mode,$args=null) {
 		$name = $option->name;
 		$label = $option->label;
 		$description = $option->description;
-		$id = $option->name . '-id';
-		$did = $option->name . '-description';
 
-
-
-		$form_name = '';
-		$extra_tags = '';
-		if(!isset($args['input']) || $args['input'] ){
-
-		if(isset($args['optiongroup']) && $args['optiongroup']) {
+		$form_data = $this->helper->get_from_element_data('text',$name,$args);
+		$form_name = $form_data['form_name'];
+		$extra_tags = $form_data['extra_tags'];
+		$id = $form_data['id'];
+		$extra_tags = $form_data['extra_tags'];
+		$did = $form_data['description-id'];
 		
-		$group_name = $args['groupname'];
-		$form_name = "divinestaroptions[optiongroup][$group_name][text][$name]";
-
-		} else {
-
-		$form_name = "divinestaroptions[text][$name]";
-
-	    }
-
-	    // $this->helper->debug_message("<h1>TEXT</h1>");
-	    if(isset($args['optiongroup']) && $args['optiongroup']) {
-    			$group_name = $args['groupname'];
-    		 	$extra_tags .= " data-group='$group_name' data-option-type='text' data-name='{$name}' ";
-    	}
-		if(isset($args['form_name']) && $args['form_name']) {
-
-				$data_form_name = $args['form_name'];
-				$extra_tags .= " data-for='$data_form_name'";
-				if(isset($args['contentindex'])) {
-				$ci = $args['contentindex'];
-				$form_name =  $data_form_name."[optiongroup][$ci][$group_name][text][$name]";
-			
-				} else {
-				$form_name =  $data_form_name."[optiongroup][$group_name][text][$name]";
-				}
-				$id = $form_name ."-id";	 	
-
-    	}
-
-
-
-
-	    } else {
-
-	    	$extra_tags .= " disabled ";
-	    	if(isset($args['optiongroup']) && $args['optiongroup']) {
-	    			$group_name = $args['groupname'];
-	    		 	$extra_tags .= " data-group='$group_name' data-option-type='text' data-name='{$name}' ";
-	    	}
-			if(isset($args['form_name']) && $args['form_name']) {
-	    			$data_form_name = $args['form_name'];
-	    		 	$extra_tags .= " data-for='$data_form_name' ";
-	    	}
-	    }
-	   
 
 
 	    $html  = <<<HTML

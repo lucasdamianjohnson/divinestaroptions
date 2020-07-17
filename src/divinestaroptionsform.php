@@ -931,7 +931,7 @@ span.ds-form-icon-arrow-up {
   width: 200px;
   overflow: auto;
   z-index: 900;
-  margin-top: 104px;
+  margin-top: -3px;
 
 }
 
@@ -1025,7 +1025,9 @@ ul.ds-options-dnd-list .ds-options-sortablelist-group-item {
 .ds-options-list-bottom-content input {
   width: 180px;
 }
-
+.ds-options-list-bottom-content input[type='checkbox'] {
+  width: 15px;
+}
 .ds-options-list-bottom-content.ds-options-list-item-contracted {
 	display: none;
 }

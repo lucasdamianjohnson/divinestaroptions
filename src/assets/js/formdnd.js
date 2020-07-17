@@ -223,12 +223,9 @@ var hasclosebtn = false;
 function updateSortableListBottmContent(div,num,flags) {
 
   if(flags['data-dynamic-input']) {
-    children = div.getElementsByTagName('input');
-    for(var k = 0; k < children.length; k++) {
-      input = children[k];
-
-      
-   
+    inputs = div.getElementsByTagName('input');
+    for(var k = 0; k < inputs.length; k++) {
+      input = inputs[k];
       var group = input.getAttribute('data-group');
       var type = input.getAttribute('data-option-type');
       var dname = input.getAttribute('data-name');
@@ -239,11 +236,35 @@ function updateSortableListBottmContent(div,num,flags) {
       input.id = name + "-id";
   
       input.removeAttribute('disabled');
-
-
-      
     }
 
+    selects = div.getElementsByTagName('select');
+    for(var k = 0; k < selects.length; k++) {
+      select = selects[k];
+      var group = select.getAttribute('data-group');
+      var type = select.getAttribute('data-option-type');
+      var dname = select.getAttribute('data-name');
+      var form = select.getAttribute('data-for');
+      var name = `${form}[optiongroup][${num}][${group}][${type}][${dname}]`;
+      var value = select.value;
+      select.name = name;
+      select.id = name + "-id";
+      select.removeAttribute('disabled');
+    }
+
+    textareas = div.getElementsByTagName('textarea');
+    for(var k = 0; k < textareas.length; k++) {
+      textarea = textareas[k];
+      var group = textarea.getAttribute('data-group');
+      var type = textarea.getAttribute('data-option-type');
+      var dname = textarea.getAttribute('data-name');
+      var form = textarea.getAttribute('data-for');
+      var name = `${form}[optiongroup][${num}][${group}][${type}][${dname}]`;
+      var value = textarea.value;
+      textarea.name = name;
+      textarea.id = name + "-id";
+      textarea.removeAttribute('disabled');
+    }
 
   }
 

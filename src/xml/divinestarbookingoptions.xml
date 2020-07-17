@@ -178,6 +178,37 @@ Divine Star Options
 							<value>#1a1a1a</value>
 							<description> This is the first test option. </description>
 						</option> 
+						<option type="selectdropdown" >
+							<label>Inline option</label>
+							<name>selectdropdownoptiongroup</name>
+							<value>option5</value>
+							<description> This is a description for a select.</description>
+							<so>
+								<o value='option1'>Option 1</o>
+								<o value='option2'>Option 2</o>
+								<o value='option3'>Option 3</o>
+								<o value='option4'>Option 4</o>
+								<o value='option5'>Option 5</o>
+								<o value='option6'>Option 6</o>
+								<o value='option7'>Option 7</o>
+								<o value='option8'>Option 8</o>
+								<o value='option9'>Option 9</o>
+								<o value='option10'>Option 10</o>
+								<o value='option11'>Option 11</o>
+								<o value='option12'>Option 12</o>
+								<o value='option13'>Option 13</o>
+								<o value='option14'>Option 14</o>
+								<o value='option15'>Option 15</o>
+								<o value='option16'>Option 16</o>
+							</so>
+	    				</option>
+	    				<option type="checkbox">
+							<title>Check box test</title>
+							<label>Nested checkbox.</label>
+							<name>checkboxtest1</name>
+							<value>true</value>
+							<description> This is a description for a checkbox.</description>
+						</option>
 					</option>
 				</content>
 				<content cid='3' type='html'>

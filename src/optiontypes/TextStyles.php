@@ -63,7 +63,7 @@ class TextStyles extends Option
 		
 		if($type == 'font') {
 			if($mode == 'font-family') {
-				return $this->font_family_dropdown_search($option,$value);
+				return $this->font_family_dropdown_search($option,$value,$args);
 
 			}
 
@@ -85,15 +85,26 @@ class TextStyles extends Option
 
 
 
-	private function font_family_dropdown_search($option,$value) {
+	private function font_family_dropdown_search($option,$value,$args) {
 		$label = $option->label;
 		$name = (string) $option->name;
 		$description = $option->description;
-		$id = $option->value . '-id';
-		$did = $option->name . '-description';
+	
+		if(count($value) == 0){
+			$value = (string)$option->value;
+		}
+
+		$form_data = $this->helper->get_from_element_data('text',$name,$args);
+		$form_name = $form_data['form_name'];
+		$extra_tags = $form_data['extra_tags'];
+		$id = $form_data['id'];
+		$extra_tags = $form_data['extra_tags'];
+		$did = $form_data['description-id'];
+
+
+
 
 		$fonts = $this->get_fonts();
-		$form_name = "divinestaroptions[font][$name]";
 		$font_data = '';
 		$font_array = array();
 		foreach($fonts as $font_family => $ff) {
@@ -114,43 +125,33 @@ class TextStyles extends Option
 
 
 	$html = <<<HTML
-<div class='flex-row'>
 
-<div class="flex-col flex-center">
-<p class='ds-form-label'>Font Fanily</p>
-</div>
 
-<div class="flex-col flex-center">
+	<input type="hidden" value="" id="{$form_name}" {$extra_tags} name="{$form_name}"/>
+	<div tabindex="0" class="dropdown">
+	<div class='ds-dropdown-items dropbtn'>
 
-<input type="hidden" value="" id="{$form_name}" name="{$form_name}"/>
-<div tabindex="0" class="dropdown">
-<div class='ds-dropdown-items dropbtn'>
+		<div tabindex="0" class="ds-options-dropdownsearch-currentselected" onclick="dropDownSearchClick(event,'{$form_name}')">
+		<span id='{$form_name}-dropdownsearch-currentselected'>$value</span>
+		</div>
 
-	<div tabindex="0" class="ds-options-dropdownsearch-currentselected" onclick="dropDownSearchClick(event,'{$form_name}')">
-	<span id='{$form_name}-dropdownsearch-currentselected'>Arial</span>
+		<div tabindex="0" id='{$form_name}-dropdownsearch-clearcurrentselected' class='ds-options-dropdownsearch-clearselect'>
+		<span  onclick='dropDownSearchClearSelect(event,"{$form_name}")' class="ds-close-image"></span>
+		</div>
+
+		<div tabindex="0" id='{$form_name}-dropdownsearch-dropdownbutton' class='ds-options-dropdownsearch-dropdownbutton'>
+		<span  onclick='dropDownSearchClick(event,"{$form_name}")' class="ds-arrowdown-image"></span>
+		</div>
+
 	</div>
-
-	<div tabindex="0" id='{$form_name}-dropdownsearch-clearcurrentselected' class='ds-options-dropdownsearch-clearselect'>
-	<span  onclick='dropDownSearchClearSelect(event,"{$form_name}")' class="ds-close-image"></span>
 	</div>
+	  <div id="{$form_name}-dropdownsearch-dropdown" class="dropdown-content">
+	    <input class='ds-options-dropdownsearch-searchinput' type="text" placeholder="Search.." id="{$form_name}-dropdownsearch-searchinput" onkeyup="filterFunction('{$form_name}')">
+	    <div class='search-list-container'>
+	    $font_data
+	    </div>
+	  </div>
 
-	<div tabindex="0" id='{$form_name}-dropdownsearch-dropdownbutton' class='ds-options-dropdownsearch-dropdownbutton'>
-	<span  onclick='dropDownSearchClick(event,"{$form_name}")' class="ds-arrowdown-image"></span>
-	</div>
-
-</div>
-</div>
-  <div id="{$form_name}-dropdownsearch-dropdown" class="dropdown-content">
-    <input class='ds-options-dropdownsearch-searchinput' type="text" placeholder="Search.." id="{$form_name}-dropdownsearch-searchinput" onkeyup="filterFunction('{$form_name}')">
-    <div class='search-list-container'>
-    $font_data 
-    </div>
-  </div>
-<div>
-</div>
-
-</div>
-</div>
 
 <br>
 <div class='ds-options-font-display'>
@@ -158,7 +159,24 @@ class TextStyles extends Option
 </div>
 HTML;
 
-		return $this->helper->get_form_wrap($html,$label,true,$id);
+   if(isset($args['nested']) && $args['nested']) {
+	 		$html = <<<HTML
+			<div class='flex-row'>
+				<div class="flex-col flex-center">
+					<label for="{$id}">$label</label>
+				</div>
+				<div class="flex-col flex-center">
+					$html
+				</div>    
+
+			</div>    	
+HTML;
+	    	return $html;
+	    } else {
+	    		$this->helper->debug_message($label);
+	    	return 	$this->helper->get_form_wrap($html,$label,true,$id);
+	    }
+
 	}
 
 
